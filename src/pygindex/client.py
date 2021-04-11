@@ -18,7 +18,6 @@ class IGUserAuth:
     def __post_init__(self):
         """Attempt to fill in configuration from env vars"""
         for fld in fields(self):
-            print(fld.name)
             if getattr(self, fld.name) is None:
                 env_var_name = "IG_{}".format(fld.name.upper())
                 if env_var_name not in os.environ:
