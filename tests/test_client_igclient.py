@@ -1,12 +1,19 @@
+import time
+import pytest
 import requests
 from pygindex.client import IGClient, IGAPIConfig, IGUserAuth, IGResponse
 
 
-def test_client():
-    client = IGClient(IGUserAuth("api_key", "user_name", "password"),
+@pytest.fixture(scope="module")
+def ig_client():
+    client = IGClient(IGUserAuth("api_key", "username", "password"),
                       IGAPIConfig("demo"))
-    assert isinstance(client._auth, IGUserAuth)
-    assert isinstance(client._api, IGAPIConfig)
+    return client
+
+
+def test_client(ig_client):
+    assert isinstance(ig_client._auth, IGUserAuth)
+    assert isinstance(ig_client._api, IGAPIConfig)
 
 
 def test_request(monkeypatch):
@@ -34,3 +41,7 @@ def test_request(monkeypatch):
     assert res.data == {"d_key": "d_value"}
     assert res.headers == {"h_key": "h_value"}
 
+
+def test_session_invalid_timed_out(ig_client):
+    ig_client._session.expires = int(time.time()) - 1000
+    assert ig_client._authentication_is_valid is False
