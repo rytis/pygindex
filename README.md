@@ -1,4 +1,4 @@
-# pygindex
+# PyGIndex
 
 Python library/framework to access and trade on IG Index
 
@@ -6,6 +6,74 @@ Python library/framework to access and trade on IG Index
 [![Build Status][build-image]][build-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Quality][quality-image]][quality-url]
+
+# Examples
+
+## Get session details
+
+    from pygindex.client import IGClient
+    
+    c = IGClient()
+    s = c.get_session_details()
+    print(s)
+
+Will produce
+
+    {'clientId': 'XXXXXXXXX', 
+     'accountId': 'XXXXX', 
+     'timezoneOffset': 1, 
+     'locale': 'en_GB', 
+     'currency': 'GBP', 
+     'lightstreamerEndpoint': 'https://apd.marketdatasystems.com'}
+
+## Get account details
+
+    from pygindex.client import IGClient
+
+    c = IGClient()
+    s = c.get_accounts()
+    print(s)
+
+Will produce
+
+    {
+        "accounts": [
+            {
+                "accountAlias": null,
+                "accountId": "XXXXX",
+                "accountName": "CFD",
+                "accountType": "CFD",
+                "balance": {
+                    "available": 0.0,
+                    "balance": 0.0,
+                    "deposit": 0.0,
+                    "profitLoss": 0.0
+                },
+                "canTransferFrom": true,
+                "canTransferTo": true,
+                "currency": "GBP",
+                "preferred": false,
+                "status": "ENABLED"
+            },
+            {
+                "accountAlias": null,
+                "accountId": "XXXXX",
+                "accountName": "Spread bet",
+                "accountType": "SPREADBET",
+                "balance": {
+                    "available": 0.0,
+                    "balance": 0.0,
+                    "deposit": 0.0,
+                    "profitLoss": 0.0
+                },
+                "canTransferFrom": true,
+                "canTransferTo": true,
+                "currency": "GBP",
+                "preferred": true,
+                "status": "ENABLED"
+            }
+        ]
+    }
 
 <!-- Links -->
 
