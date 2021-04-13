@@ -7,6 +7,18 @@ module = "pygindex"
 author = "Rytis Sileika"
 author-email = "rts.pub@pulegium.eu"
 home-page = "https://github.com/rytis/pygindex"
-classifiers = [ "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Office/Business :: Financial",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+]
 description-file = "README.md"
 
