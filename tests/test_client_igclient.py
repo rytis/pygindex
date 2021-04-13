@@ -1,7 +1,8 @@
 import time
 import pytest
 import requests
-from pygindex.client import IGClient, IGAPIConfig, IGUserAuth, IGResponse
+from pygindex.client import IGClient, IGAPIConfig, IGUserAuth, \
+    IGResponse, IGSession
 
 
 @pytest.fixture(scope="module")
@@ -45,6 +46,28 @@ def test_request(monkeypatch):
 def test_session_invalid_timed_out(ig_client):
     ig_client._session.expires = int(time.time()) - 1000
     assert ig_client._authentication_is_valid is False
+
+
+def test_session_invalid_no_token(ig_client):
+    session_data = IGSession(cst="abcdefg",
+                             expires=int(time.time())+1000)
+    ig_client._session = session_data
+    assert ig_client._authentication_is_valid is False
+
+
+def test_session_invalid_no_cst(ig_client):
+    session_data = IGSession(security_token="abcdefg",
+                             expires=int(time.time())+1000)
+    ig_client._session = session_data
+    assert ig_client._authentication_is_valid is False
+
+
+def test_session_valid(ig_client):
+    session_data = IGSession(cst="abcdefg",
+                             security_token="abcdefg",
+                             expires=int(time.time())+1000)
+    ig_client._session = session_data
+    assert ig_client._authentication_is_valid is True
 
 
 def test_authentication(monkeypatch, ig_client):
