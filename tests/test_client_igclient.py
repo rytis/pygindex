@@ -87,7 +87,14 @@ def test_authentication(monkeypatch, ig_client):
         return MockResp()
 
     monkeypatch.setattr(requests, "post", req_post)
-
     ig_client._authenticate()
-
     assert ig_client._session.cst == "abcdefg"
+
+
+def test_authenticated_request(mocker, ig_client):
+    mocker.patch.object(ig_client, "_request", return_value=None)
+    res = ig_client._authenticated_request("https://example.com",
+                                           "get",
+                                           headers={},
+                                           data={})
+    ig_client._request.assert_called()
