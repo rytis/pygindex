@@ -3,6 +3,7 @@
 Python library/framework to access and trade on IG Index
 
 [![PyPI Version][pypi-image]][pypi-url]
+[![Python Version][python-image]][pypi-url]
 [![Build Status][build-image]][build-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Quality][quality-image]][quality-url]
@@ -77,6 +78,7 @@ Will produce
 
 <!-- Links -->
 
+[python-image]: https://img.shields.io/pypi/pyversions/pygindex
 [pypi-image]: https://img.shields.io/pypi/v/pygindex
 [pypi-url]: https://pypi.org/project/pygindex/
 [build-image]: https://github.com/rytis/pygindex/actions/workflows/build.yml/badge.svg
