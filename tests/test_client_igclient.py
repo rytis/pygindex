@@ -13,13 +13,15 @@ def ig_client():
 
 
 def test_client(ig_client):
-    """Check if we have internal data structures set"""
+    """Check if we have internal data structures set
+    """
     assert isinstance(ig_client._auth, IGUserAuth)
     assert isinstance(ig_client._api, IGAPIConfig)
 
 
 def test_request(monkeypatch):
-    """Test if request abstraction helper returns correct data structures"""
+    """Test if request abstraction helper returns correct data structures
+    """
 
     class MockResp:
         def __init__(self):
@@ -46,13 +48,15 @@ def test_request(monkeypatch):
 
 
 def test_session_invalid_timed_out(ig_client):
-    """Test that we detect expired sessions"""
+    """Test that we detect expired sessions
+    """
     ig_client._session.expires = int(time.time()) - 1000
     assert ig_client._authentication_is_valid is False
 
 
 def test_session_invalid_no_token(ig_client):
-    """Test that we detect missing security token"""
+    """Test that we detect missing security token
+    """
     session_data = IGSession(cst="abcdefg",
                              expires=int(time.time())+1000)
     ig_client._session = session_data
@@ -60,7 +64,8 @@ def test_session_invalid_no_token(ig_client):
 
 
 def test_session_invalid_no_cst(ig_client):
-    """Test that we detect missing CST"""
+    """Test that we detect missing CST
+    """
     session_data = IGSession(security_token="abcdefg",
                              expires=int(time.time())+1000)
     ig_client._session = session_data
@@ -68,7 +73,8 @@ def test_session_invalid_no_cst(ig_client):
 
 
 def test_session_valid(ig_client):
-    """Test we recognise valid session state"""
+    """Test we recognise valid session state
+    """
     session_data = IGSession(cst="abcdefg",
                              security_token="abcdefg",
                              expires=int(time.time())+1000)
@@ -77,7 +83,8 @@ def test_session_valid(ig_client):
 
 
 def test_authentication(monkeypatch, ig_client):
-    """Test we can retrieve authentication details"""
+    """Test we can retrieve authentication details
+    """
 
     class MockResp:
         def __init__(self):
@@ -99,10 +106,31 @@ def test_authentication(monkeypatch, ig_client):
 
 
 def test_authenticated_request(mocker, ig_client):
-    """Test we can perform authenticated request"""
+    """Test we can perform authenticated request
+    """
     mocker.patch.object(ig_client, "_request", return_value=None)
     res = ig_client._authenticated_request("https://example.com",
                                            "get",
                                            headers={},
                                            data={})
     ig_client._request.assert_called()
+
+
+def test_get_session_details(mocker, ig_client):
+    """Test getting session details from correct URL, and passing data back
+    """
+    mock_ret = IGResponse(data={"d_key": "d_val"}, headers={"h_key": "h_val"})
+    mocker.patch.object(ig_client, "_authenticated_request", return_value=mock_ret)
+    data = ig_client.get_session_details()
+    ig_client._authenticated_request.assert_called_with(url=ig_client._api.session_url, method="get")
+    assert data == {"d_key": "d_val"}
+
+
+def test_get_accounts(mocker, ig_client):
+    """Test getting account details from correct URL, and passing data back
+    """
+    mock_ret = IGResponse(data={"d_key": "d_val"}, headers={"h_key": "h_val"})
+    mocker.patch.object(ig_client, "_authenticated_request", return_value=mock_ret)
+    data = ig_client.get_accounts()
+    ig_client._authenticated_request.assert_called_with(url=ig_client._api.accounts_url, method="get")
+    assert data == {"d_key": "d_val"}

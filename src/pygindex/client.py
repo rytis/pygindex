@@ -164,14 +164,14 @@ class IGClient:
         self._session.cst = req.headers["CST"]
         self._session.security_token = req.headers["X-SECURITY-TOKEN"]
 
-    def get_session_details(self):
+    def get_session_details(self) -> dict:
         """Retrieve session details from the API"""
         req = self._authenticated_request(
             url=self._api.session_url, method="get"
         )
         return req.data
 
-    def get_accounts(self):
+    def get_accounts(self) -> dict:
         """Retrieve account details from the API"""
         req = self._authenticated_request(
             url=self._api.accounts_url, method="get"
