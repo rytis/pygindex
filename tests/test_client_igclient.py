@@ -45,3 +45,26 @@ def test_request(monkeypatch):
 def test_session_invalid_timed_out(ig_client):
     ig_client._session.expires = int(time.time()) - 1000
     assert ig_client._authentication_is_valid is False
+
+
+def test_authentication(monkeypatch, ig_client):
+
+    class MockResp:
+        def __init__(self):
+            self.status_code = 200
+            self.url = "http://example.com"
+            self.headers = {"Access-Control-Max-Age": "3600",
+                            "CST": "abcdefg",
+                            "X-SECURITY-TOKEN": "gfedcba"}
+
+        def json(self):
+            return {"d_key": "d_value"}
+
+    def req_post(*args, **kwargs):
+        return MockResp()
+
+    monkeypatch.setattr(requests, "post", req_post)
+
+    ig_client._authenticate()
+
+    assert ig_client._session.cst == "abcdefg"
