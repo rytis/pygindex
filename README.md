@@ -7,6 +7,7 @@ Python library/framework to access and trade on IG Index
 [![Build Status][build-image]][build-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Quality][quality-image]][quality-url]
+[![Documentation][rtd-image]][rtd-url]
 
 # Installing
 
