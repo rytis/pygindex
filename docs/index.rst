@@ -11,6 +11,8 @@ PyGIndex is a library and framework to access, interact and trade on IG Index pl
 Examples
 --------
 
+Get session data:
+
 .. code-block:: python
 
    from pygindex.client import IGClient
@@ -30,8 +32,58 @@ Produces::
     'lightstreamerEndpoint': 'https://apd.marketdatasystems.com'
   }
 
+Get account details:
+  
+.. code-block:: python
    
+    from pygindex.client import IGClient
 
+    c = IGClient()
+    s = c.get_accounts()
+    print(s)
+
+Produces::
+
+    {
+	"accounts": [
+	    {
+		"accountAlias": null,
+		"accountId": "XXXXX",
+		"accountName": "CFD",
+		"accountType": "CFD",
+		"balance": {
+		    "available": 0.0,
+		    "balance": 0.0,
+		    "deposit": 0.0,
+		    "profitLoss": 0.0
+		},
+		"canTransferFrom": true,
+		"canTransferTo": true,
+		"currency": "GBP",
+		"preferred": false,
+		"status": "ENABLED"
+	    },
+	    {
+		"accountAlias": null,
+		"accountId": "XXXXX",
+		"accountName": "Spread bet",
+		"accountType": "SPREADBET",
+		"balance": {
+		    "available": 0.0,
+		    "balance": 0.0,
+		    "deposit": 0.0,
+		    "profitLoss": 0.0
+		},
+		"canTransferFrom": true,
+		"canTransferTo": true,
+		"currency": "GBP",
+		"preferred": true,
+		"status": "ENABLED"
+	    }
+	]
+    }
+
+		
 API Reference
 -------------
 

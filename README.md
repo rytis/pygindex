@@ -8,6 +8,12 @@ Python library/framework to access and trade on IG Index
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Quality][quality-image]][quality-url]
 
+# Installing
+
+Install and update using pip:
+
+    pip install -U pygindex
+
 # Examples
 
 ## Get session details
@@ -27,54 +33,12 @@ Will produce
      'currency': 'GBP', 
      'lightstreamerEndpoint': 'https://apd.marketdatasystems.com'}
 
-## Get account details
+# Links
 
-    from pygindex.client import IGClient
-
-    c = IGClient()
-    s = c.get_accounts()
-    print(s)
-
-Will produce
-
-    {
-        "accounts": [
-            {
-                "accountAlias": null,
-                "accountId": "XXXXX",
-                "accountName": "CFD",
-                "accountType": "CFD",
-                "balance": {
-                    "available": 0.0,
-                    "balance": 0.0,
-                    "deposit": 0.0,
-                    "profitLoss": 0.0
-                },
-                "canTransferFrom": true,
-                "canTransferTo": true,
-                "currency": "GBP",
-                "preferred": false,
-                "status": "ENABLED"
-            },
-            {
-                "accountAlias": null,
-                "accountId": "XXXXX",
-                "accountName": "Spread bet",
-                "accountType": "SPREADBET",
-                "balance": {
-                    "available": 0.0,
-                    "balance": 0.0,
-                    "deposit": 0.0,
-                    "profitLoss": 0.0
-                },
-                "canTransferFrom": true,
-                "canTransferTo": true,
-                "currency": "GBP",
-                "preferred": true,
-                "status": "ENABLED"
-            }
-        ]
-    }
+* [Documentation][rtd-url]
+* [PyPI][pypi-url]
+* [Source](https://github.com/rytis/pygindex/)
+* [Issues](https://github.com/rytis/pygindex/issues/)
 
 <!-- Links -->
 
@@ -87,3 +51,5 @@ Will produce
 [coverage-url]: https://codecov.io/gh/rytis/pygindex
 [quality-image]: https://api.codeclimate.com/v1/badges/85717ac8e0612fa5d695/maintainability
 [quality-url]: https://codeclimate.com/github/rytis/pygindex
+[rtd-image]: https://img.shields.io/readthedocs/pygindex
+[rtd-url]: https://pygindex.readthedocs.io
