@@ -8,6 +8,14 @@ Welcome to PyGIndex documentation!
 
 PyGIndex is a library and framework to access, interact and trade on IG Index platform.
 
+User guide
+----------
+
+.. toctree::
+   :maxdepth: 2
+
+   installation	      
+
 Examples
 --------
 
@@ -83,7 +91,6 @@ Produces::
 	]
     }
 
-		
 API Reference
 -------------
 
