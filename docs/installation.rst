@@ -9,7 +9,7 @@ Recommended Python version is 3.9 and above.
 Virtual environment
 -------------------
 
-Recommended way of installing :mod:`pygindex` is to use
+Recommended way of installing PyGIndex is to use
 Python virtual environment.
 
 Python comes with :mod:`venv` module, which makes it
@@ -51,7 +51,7 @@ Install PyGIndex
 ----------------
 
 In the active environment run the following command to
-install :mod:`pygindex`:
+install :PyGIndex:
 
 .. code-block:: sh
 
