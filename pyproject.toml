@@ -4,10 +4,9 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "pygindex"
-module = "pygindex"
-author = "Rytis Sileika"
-author-email = "rts.pub@pulegium.eu"
-home-page = "https://github.com/rytis/pygindex"
+authors = [
+    {name = "Rytis Sileika", email = "rts.pub@pulegium.eu"},
+]
 dependencies = [
     "requests",
 ]
@@ -24,7 +23,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry",
 ]
-description-file = "README.md"
+readme = "README.md"
 dynamic = ["version", "description"]
 
 [project.urls]
