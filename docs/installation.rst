@@ -9,8 +9,8 @@ Recommended Python version is 3.9 and above.
 Dependencies
 ------------
 
-PyGindex depends on the following packages, that will be
-automatically installed with PyGIndex:
+**PyGindex** depends on the following packages, that will be
+automatically installed:
 
 * `Requests`_ is used to interact with IG Index API services
   over HTTPS
@@ -20,7 +20,7 @@ automatically installed with PyGIndex:
 Virtual environment
 -------------------
 
-Recommended way of installing PyGIndex is to use
+Recommended way of installing **PyGIndex** is to use
 Python virtual environment.
 
 Python comes with :mod:`venv` module, which makes it
@@ -41,7 +41,7 @@ Activate the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 You need to activate the newly created environment before
-you install PyGIndex and its dependencies:
+you install **PyGIndex** and its dependencies:
 
 .. code-block:: sh
 
@@ -62,7 +62,7 @@ Install PyGIndex
 ----------------
 
 In the active environment run the following command to
-install PyGIndex:
+install **PyGIndex**:
 
 .. code-block:: sh
 
