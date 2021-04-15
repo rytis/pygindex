@@ -41,7 +41,7 @@ Activate the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 You need to activate the newly created environment before
-you install :mod:`pygindex` and its dependencies:
+you install PyGIndex and its dependencies:
 
 .. code-block:: sh
 
@@ -62,7 +62,7 @@ Install PyGIndex
 ----------------
 
 In the active environment run the following command to
-install :PyGIndex:
+install PyGIndex:
 
 .. code-block:: sh
 
