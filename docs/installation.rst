@@ -6,6 +6,17 @@ Python version
 
 Recommended Python version is 3.9 and above.
 
+Dependencies
+------------
+
+PyGindex depends on the following packages, that will be
+automatically installed with PyGIndex:
+
+* `Requests`_ is used to interact with IG Index API services
+  over HTTPS
+
+.. _Requests: https://docs.python-requests.org/
+
 Virtual environment
 -------------------
 
