@@ -25,6 +25,7 @@ classifiers = [
     "Intended Audience :: Financial and Insurance Industry",
 ]
 description-file = "README.md"
+dynamic = ["version", "description"]
 
 [project.urls]
 documentation = "https://pygindex.readthedocs.io/en/latest/"
