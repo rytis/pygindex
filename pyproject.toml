@@ -22,3 +22,6 @@ classifiers = [
 ]
 description-file = "README.md"
 
+[project.urls]
+documentation = "https://pygindex.readthedocs.io/en/latest/"
+source = "https://github.com/rytis/pygindex/"
