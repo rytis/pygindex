@@ -42,7 +42,14 @@ class IGUserAuth:
 
     @property
     def auth_req_headers(self) -> Dict[str, str]:
-        """Construct authentication headers"""
+        """Construct authentication headers
+
+        These headers need to be sent with every request made to
+        IG Index API
+
+        :returns: Dictionary containing required authentication headers
+        :rtype: dict
+        """
         headers = {
             "X-IG-API-KEY": self.api_key,
             "Content-Type": "application/json",
@@ -51,7 +58,14 @@ class IGUserAuth:
 
     @property
     def auth_req_data(self) -> Dict[str, str]:
-        """Authentication data used in requests"""
+        """Construct Authentication data
+
+        Constructs authentication data that will be used to obtain
+        authentication key from IG Index API
+
+        :returns: Dictionary containing authentication details
+        :rtype: dict
+        """
         data = {
             "identifier": self.username,
             "password": self.password,
