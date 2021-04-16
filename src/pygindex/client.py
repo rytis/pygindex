@@ -17,8 +17,11 @@ class IGUserAuth:
     :data:`IG_{UPPERCASE_PARAM_NAME}`, for example: :data:`IG_API_KEY`
 
     :param api_key: API key
+    :type api_key: str
     :param username: Username
+    :type username: str
     :param password: Password
+    :type password: str
     """
 
     api_key: str = None
@@ -59,7 +62,19 @@ class IGUserAuth:
 
 @dataclass
 class IGAPIConfig:
-    """API configuration data"""
+    """Dataclass for API configuration
+
+    Configuration is provided during initialisation, otherwise, if no
+    value is specified we will try to look up environment variable
+    called :data:`IG_PLATFORM`.
+
+    :param platform: Specify what platform to use. Available options are
+                     :data:`live` - to access live trading platform, or
+                     :data:`demo` - to access demo trading platform
+    :type platform: str
+    :param base_url: The value is resolved based on the ``platform`` value.
+    :type base_url: str
+    """
 
     platform: str = None
     base_url: str = field(init=False)
@@ -81,12 +96,20 @@ class IGAPIConfig:
 
     @property
     def session_url(self) -> str:
-        """Session URL"""
+        """Return IG Index API Session URL
+
+        :returns: Session API URL
+        :rtype: str
+        """
         return f"{self.base_url}/session"
 
     @property
     def accounts_url(self) -> str:
-        """Accounts URL"""
+        """Return IG Index API Accounts URL
+
+        :returns: Accounts API URL
+        :rtype: str
+        """
         return f"{self.base_url}/accounts"
 
 
