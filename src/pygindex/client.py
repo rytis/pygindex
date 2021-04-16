@@ -129,8 +129,18 @@ class IGAPIConfig:
 
 @dataclass
 class IGSession:
-    """Session data"""
+    """Dataclass to hold Session data
 
+    All values are retrieved after making an authentication
+    call to IG Index API
+
+    :param cst: CST
+    :type cst: str
+    :param security_token: Security token
+    :type security_token: str
+    :param expires: Expiration timestamp
+    :type expires: int
+    """
     cst: str = None
     security_token: str = None
     expires: int = 0
@@ -138,8 +148,13 @@ class IGSession:
 
 @dataclass
 class IGResponse:
-    """Response data"""
+    """Dataclass to hold request Response data
 
+    :param data: Response data
+    :type data: dict
+    :param headers: Response headers
+    :type headers: dict
+    """
     data: Dict
     headers: Dict
 
