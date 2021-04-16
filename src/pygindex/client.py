@@ -9,7 +9,17 @@ import requests
 
 @dataclass
 class IGUserAuth:
-    """User Authentication data"""
+    """Dataclass to hold User Authentication data
+
+    Configuration can be provided during initialisation,
+    alternatively the following environment variables
+    will be looked up if no arguments were provided:
+    :data:`IG_{UPPERCASE_PARAM_NAME}`, for example: :data:`IG_API_KEY`
+
+    :param api_key: API key
+    :param username: Username
+    :param password: Password
+    """
 
     api_key: str = None
     username: str = None
