@@ -160,7 +160,13 @@ class IGResponse:
 
 
 class IGClient:
-    """Client class"""
+    """This is a class implementing basic IG Index API Client actions.
+
+    :param auth: User authentication details
+    :type auth: :class:`IGUserAuth`
+    :param api_config: API configuration details
+    :type api_config: :class:`IGAPIConf`
+    """
 
     def __init__(
         self, auth: IGUserAuth = None, api_config: IGAPIConfig = None
@@ -173,7 +179,14 @@ class IGClient:
     def _request(
         url: str, method: str, headers: Dict, data: Dict
     ) -> IGResponse:
-        """Make a request"""
+        """Make an HTTP request against specified URL
+        :param url: URL to perform the request against
+        :param method: HTTP method type
+        :param headers: HTTP Headers to send with the request
+        :param data: Data to include in the HTTP request
+        :return: Return an initialised response object
+        :rtype: :class:`IGResponse`
+        """
         req = getattr(requests, method.lower())(
             url, headers=headers, json=data
         )
@@ -182,7 +195,10 @@ class IGClient:
 
     @property
     def _authentication_is_valid(self) -> bool:
-        """Check is we're authenticated, and the authentication is current"""
+        """Check is we're authenticated, and the authentication is current
+        :return: ``True`` if authentication is current, ``False`` otherwise
+        :rtype: bool
+        """
         current_time = int(time.time())
         if self._session.expires < current_time:
             return False
@@ -227,14 +243,89 @@ class IGClient:
         self._session.security_token = req.headers["X-SECURITY-TOKEN"]
 
     def get_session_details(self) -> dict:
-        """Retrieve session details from the API"""
+        """This method retrieves IG API specific session details.
+
+        Example::
+
+            c = IGClient()
+            s = c.get_session_details()
+
+        Session details::
+
+            {
+              'clientId': 'XXXXXXXXX',
+              'accountId': 'XXXXX',
+              'timezoneOffset': 1,
+              'locale': 'en_GB',
+              'currency': 'GBP',
+              'lightstreamerEndpoint': 'https://apd.marketdatasystems.com'
+            }
+
+        :return: Dictionary with session details as documented in `Session API`_
+        :rtype: dict
+
+        .. _Session API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=600
+        """
         req = self._authenticated_request(
             url=self._api.session_url, method="get"
         )
         return req.data
 
     def get_accounts(self) -> dict:
-        """Retrieve account details from the API"""
+        """ This method retrieves account details
+
+        Example::
+
+            c = IGClient()
+            s = c.get_accounts()
+
+        Account details::
+
+            {
+                "accounts": [
+                    {
+                        "accountAlias": null,
+                        "accountId": "XXXXX",
+                        "accountName": "CFD",
+                        "accountType": "CFD",
+                        "balance": {
+                            "available": 0.0,
+                            "balance": 0.0,
+                            "deposit": 0.0,
+                            "profitLoss": 0.0
+                        },
+                        "canTransferFrom": true,
+                        "canTransferTo": true,
+                        "currency": "GBP",
+                        "preferred": false,
+                        "status": "ENABLED"
+                    },
+                    {
+                        "accountAlias": null,
+                        "accountId": "XXXXX",
+                        "accountName": "Spread bet",
+                        "accountType": "SPREADBET",
+                        "balance": {
+                            "available": 0.0,
+                            "balance": 0.0,
+                            "deposit": 0.0,
+                            "profitLoss": 0.0
+                        },
+                        "canTransferFrom": true,
+                        "canTransferTo": true,
+                        "currency": "GBP",
+                        "preferred": true,
+                        "status": "ENABLED"
+                    }
+                ]
+            }
+
+        :return: Dictionary with all accounts available on the platform as
+                 documented in `Accounts API`_
+        :rtype: dict
+
+        .. _Accounts API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=619
+        """
         req = self._authenticated_request(
             url=self._api.accounts_url, method="get"
         )
