@@ -141,6 +141,7 @@ class IGSession:
     :param expires: Expiration timestamp
     :type expires: int
     """
+
     cst: str = None
     security_token: str = None
     expires: int = 0
@@ -155,6 +156,7 @@ class IGResponse:
     :param headers: Response headers
     :type headers: dict
     """
+
     data: Dict
     headers: Dict
 
@@ -168,17 +170,13 @@ class IGClient:
     :type api_config: :class:`IGAPIConf`
     """
 
-    def __init__(
-        self, auth: IGUserAuth = None, api_config: IGAPIConfig = None
-    ):
+    def __init__(self, auth: IGUserAuth = None, api_config: IGAPIConfig = None):
         self._auth = auth or IGUserAuth()
         self._api = api_config or IGAPIConfig()
         self._session = IGSession()
 
     @staticmethod
-    def _request(
-        url: str, method: str, headers: Dict, data: Dict
-    ) -> IGResponse:
+    def _request(url: str, method: str, headers: Dict, data: Dict) -> IGResponse:
         """Make an HTTP request against specified URL
         :param url: URL to perform the request against
         :param method: HTTP method type
@@ -187,9 +185,7 @@ class IGClient:
         :return: Return an initialised response object
         :rtype: :class:`IGResponse`
         """
-        req = getattr(requests, method.lower())(
-            url, headers=headers, json=data
-        )
+        req = getattr(requests, method.lower())(url, headers=headers, json=data)
         response = IGResponse(data=req.json(), headers=req.headers)
         return response
 
@@ -232,9 +228,7 @@ class IGClient:
         """
         headers = self._auth.auth_req_headers
         data = self._auth.auth_req_data
-        req = self._request(
-            self._api.session_url, "post", headers=headers, data=data
-        )
+        req = self._request(self._api.session_url, "post", headers=headers, data=data)
         if "Access-Control-Max-Age" in req.headers:
             self._session.expires = int(
                 time.time() + int(req.headers["Access-Control-Max-Age"])
@@ -266,13 +260,11 @@ class IGClient:
 
         .. _Session API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=600
         """
-        req = self._authenticated_request(
-            url=self._api.session_url, method="get"
-        )
+        req = self._authenticated_request(url=self._api.session_url, method="get")
         return req.data
 
     def get_accounts(self) -> dict:
-        """ This method retrieves account details
+        """This method retrieves account details
 
         Example::
 
@@ -326,7 +318,5 @@ class IGClient:
 
         .. _Accounts API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=619
         """
-        req = self._authenticated_request(
-            url=self._api.accounts_url, method="get"
-        )
+        req = self._authenticated_request(url=self._api.accounts_url, method="get")
         return req.data
