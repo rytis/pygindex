@@ -135,6 +135,21 @@ class IGAPIConfig:
         """
         return f"{self.base_url}/positions"
 
+    @property
+    def markets_url(self) -> str:
+        """Returns IG Index API Markets URL
+
+        This endpoint is used for multiple purposes:
+
+            * Lookup details of a selection of epics
+            * Lookup details of individual epic
+            * Search for epics
+
+        :returns: Markets API URL
+        :rtype: str
+        """
+        return f"{self.base_url}/markets"
+
 
 @dataclass
 class IGSession:
@@ -194,7 +209,10 @@ class IGClient:
         :return: Return an initialised response object
         :rtype: :class:`IGResponse`
         """
-        req = getattr(requests, method.lower())(url, headers=headers, json=data)
+        if method.lower() == "get":
+            req = getattr(requests, method.lower())(url, headers=headers, params=data)
+        else:
+            req = getattr(requests, method.lower())(url, headers=headers, json=data)
         response = IGResponse(data=req.json(), headers=req.headers)
         return response
 
@@ -383,11 +401,55 @@ class IGClient:
                 ]
             }
 
-        :returns: Dictionary with all positions with details as documented
+        :return: Dictionary with all positions with details as documented
                   in `Positions API`_
         :rtype: dict
 
         .. _Positions API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=611
         """
         req = self._authenticated_request(url=self._api.positions_url, method="get")
+        return req.data
+
+    def search_markets(self, term) -> dict:
+        """Search for markets on IG Index platform that match specified criteria
+
+        Example::
+
+            c = IGClient()
+            m = c.search_markets("AAPL")
+
+        This search yields a list of all matching products::
+
+            {
+                "markets": [
+                    {
+                        "epic": "UA.D.AAPL.DAILY.IP",
+                        "instrumentName": "Apple Inc (All Sessions)",
+                        "instrumentType": "SHARES",
+                        "expiry": "DFB",
+                        "high": 13498.0,
+                        "low": 13324.0,
+                        "percentageChange": -0.34,
+                        "netChange": -46.0,
+                        "updateTime": "04:50:07",
+                        "updateTimeUTC": "03:50:07",
+                        "bid": 13400.0,
+                        "offer": 13408.0,
+                        "delayTime": 0,
+                        "streamingPricesAvailable": false,
+                        "marketStatus": "EDITS_ONLY",
+                        "scalingFactor": 1
+                    },
+                    [...]
+                ]
+            }
+
+        :param term: Search term
+        :type term: str
+        :return: List of markets that matched search criteria
+        """
+        payload = {"searchTerm": term}
+        req = self._authenticated_request(
+            url=self._api.markets_url, method="get", data=payload
+        )
         return req.data

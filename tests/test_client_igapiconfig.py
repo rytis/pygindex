@@ -27,3 +27,8 @@ def test_accounts_url():
 def test_positions_url():
     cfg = IGAPIConfig()
     assert cfg.positions_url.endswith("/positions")
+
+
+def test_markets_url():
+    cfg = IGAPIConfig()
+    assert cfg.markets_url.endswith("/markets")
