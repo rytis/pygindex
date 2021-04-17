@@ -134,3 +134,13 @@ def test_get_accounts(mocker, ig_client):
     data = ig_client.get_accounts()
     ig_client._authenticated_request.assert_called_with(url=ig_client._api.accounts_url, method="get")
     assert data == {"d_key": "d_val"}
+
+
+def test_get_positions(mocker, ig_client):
+    """Test getting positions from correct URL, and passing data back
+    """
+    mock_ret = IGResponse(data={"d_key": "d_val"}, headers={"h_key": "h_val"})
+    mocker.patch.object(ig_client, "_authenticated_request", return_value=mock_ret)
+    data = ig_client.get_positions()
+    ig_client._authenticated_request.assert_called_with(url=ig_client._api.positions_url, method="get")
+    assert data == {"d_key": "d_val"}
