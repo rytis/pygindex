@@ -22,3 +22,8 @@ def test_session_url():
 def test_accounts_url():
     cfg = IGAPIConfig()
     assert cfg.accounts_url.endswith("/accounts")
+
+
+def test_positions_url():
+    cfg = IGAPIConfig()
+    assert cfg.positions_url.endswith("/positions")

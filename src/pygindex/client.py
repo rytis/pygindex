@@ -126,6 +126,15 @@ class IGAPIConfig:
         """
         return f"{self.base_url}/accounts"
 
+    @property
+    def positions_url(self) -> str:
+        """Returns IG Index API Positions URL
+
+        :returns: Positions API URL
+        :rtype: str
+        """
+        return f"{self.base_url}/positions"
+
 
 @dataclass
 class IGSession:
@@ -319,4 +328,66 @@ class IGClient:
         .. _Accounts API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=619
         """
         req = self._authenticated_request(url=self._api.accounts_url, method="get")
+        return req.data
+
+    def get_positions(self):
+        """This method retrieves all positions for authenticated account from the API
+
+        Example::
+
+            c = IGClient()
+            p = c.get_positions()
+
+        Positions details::
+
+            {
+                "positions": [
+                    {
+                        "position": {
+                            "contractSize": 1.0,
+                            "createdDate": "2021/02/10 11:42:56:000",
+                            "dealId": "DIAAAAGB25EY6AN",
+                            "dealSize": 0.1,
+                            "direction": "BUY",
+                            "limitLevel": null,
+                            "openLevel": 13664.0,
+                            "currency": "GBP",
+                            "controlledRisk": false,
+                            "stopLevel": null,
+                            "trailingStep": null,
+                            "trailingStopDistance": null,
+                            "limitedRiskPremium": null
+                        },
+                        "market": {
+                            "instrumentName": "Apple Inc (All Sessions)",
+                            "expiry": "DFB",
+                            "epic": "UA.D.AAPL.DAILY.IP",
+                            "instrumentType": "SHARES",
+                            "lotSize": 1.0,
+                            "high": 13498.0,
+                            "low": 13324.0,
+                            "percentageChange": -0.34,
+                            "netChange": -46.0,
+                            "bid": 13398.0,
+                            "offer": 13411.0,
+                            "updateTime": "21:59:15",
+                            "delayTime": 0,
+                            "streamingPricesAvailable": false,
+                            "marketStatus": "EDITS_ONLY",
+                            "scalingFactor": 1
+                        }
+                    },
+
+                    [...]
+
+                ]
+            }
+
+        :returns: Dictionary with all positions with details as documented
+                  in `Positions API`_
+        :rtype: dict
+
+        .. _Positions API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=611
+        """
+        req = self._authenticated_request(url=self._api.positions_url, method="get")
         return req.data
