@@ -35,6 +35,13 @@ Response Data Object
    :members:
    :inherited-members:
 
+Instrument Data Object
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: IGInstrument
+   :members:
+   :inherited-members:
+
 Client Object
 ~~~~~~~~~~~~~
 

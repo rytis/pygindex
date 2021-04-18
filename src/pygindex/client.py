@@ -3,7 +3,7 @@
 import os
 import time
 from dataclasses import dataclass, field, fields
-from typing import Dict
+from typing import Dict, Union
 import requests
 
 
@@ -202,7 +202,9 @@ class IGInstrument:
     :type epic: str
     """
 
-    epic: str
+    dealing_rules: dict
+    instrument: dict
+    snapshot: dict
 
 
 class IGClient:
@@ -473,3 +475,18 @@ class IGClient:
             url=self._api.markets_url, method="get", data=payload
         )
         return req.data
+
+    def get_instrument(self, instrument: Union[str, IGInstrument]) -> IGInstrument:
+        """Retrieve instrument details
+
+        :param instrument: Instrument to retrieve. Possible options:
+        
+                           - IG Index specific instrument identifier (EPIC) as :class:`str`
+                           - Existing instrument data structure, :class:`IGInstrument`
+        :return: A fully populated instance of :class:`IGInstrument`
+        :rtype: IGInstrument
+        """
+
+        instrument_data = {"dealing_rules": {}, "instrument": {}, "snapshot": {}}
+
+        return IGInstrument(**instrument_data)
