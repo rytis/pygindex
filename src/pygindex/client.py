@@ -185,6 +185,26 @@ class IGResponse:
     headers: Dict
 
 
+@dataclass
+class IGInstrument:
+    """Dataclass to hold IG Index Instrument data
+
+    IG Instrument is a financial instrument based on some underlying
+    financial market instrument. IG Instruments do not represent
+    real world identifiers and are used exclusively on IG Index platform.
+
+    More information about the IG Index terms can be found
+    on their `Glossary`_ page.
+
+    .. _Glossary: https://labs.ig.com/glossary
+
+    :param epic: Instrument EPIC name. IG specific instrument identifier
+    :type epic: str
+    """
+
+    epic: str
+
+
 class IGClient:
     """This is a class implementing basic IG Index API Client actions.
 
