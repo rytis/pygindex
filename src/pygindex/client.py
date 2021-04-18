@@ -151,6 +151,15 @@ class IGAPIConfig:
         """
         return f"{self.base_url}/markets"
 
+    @property
+    def prices_url(self) -> str:
+        """Returns IG Index Prices URL
+
+        :return: Prices API URL
+        :rtype: str
+        """
+        return f"{self.base_url}/prices"
+
 
 @dataclass
 class IGSession:
