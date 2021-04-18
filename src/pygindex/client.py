@@ -2,6 +2,7 @@
 
 import os
 import time
+from urllib.parse import urljoin
 from dataclasses import dataclass, field, fields
 from typing import Dict, Union
 import requests
@@ -198,8 +199,12 @@ class IGInstrument:
 
     .. _Glossary: https://labs.ig.com/glossary
 
-    :param epic: Instrument EPIC name. IG specific instrument identifier
-    :type epic: str
+    :param dealing_rules: Data structure defining instrument dealing rules
+    :type dealing_rules: dict
+    :param instrument: Instrument definition
+    :type instrument: dict
+    :param snapshot: Snapshot data
+    :type snapshot: dict
     """
 
     dealing_rules: dict
@@ -479,14 +484,173 @@ class IGClient:
     def get_instrument(self, instrument: Union[str, IGInstrument]) -> IGInstrument:
         """Retrieve instrument details
 
+        For the description of all available fields and options please
+        refer to IG Index `Market`_ documentation.
+
+        .. _Market: https://labs.ig.com/rest-trading-api-reference/service-detail?id=594
+
+        Example::
+
+            c = IGClient()
+            i = c.get_instrument("UA.D.AAPL.DAILY.IP")
+
+        The above query will return an instance of :class:`IGInstrument` containing
+        the following attributes:
+
+            - :attr:`IGInstrument.dealing_rules`
+            - :attr:`IGInstrument.instrument`
+            - :attr:`IGInstrument.snapshot`
+
+        Dealing rules data example::
+
+            {
+                "minStepDistance": {
+                    "unit": "POINTS",
+                    "value": 1.0
+                },
+                "minDealSize": {
+                    "unit": "POINTS",
+                    "value": 0.1
+                },
+                "minControlledRiskStopDistance": {
+                    "unit": "PERCENTAGE",
+                    "value": 5.0
+                },
+                "minNormalStopOrLimitDistance": {
+                    "unit": "POINTS",
+                    "value": 5.0
+                },
+                "maxStopOrLimitDistance": {
+                    "unit": "PERCENTAGE",
+                    "value": 90.0
+                },
+                "controlledRiskSpacing": {
+                    "unit": "POINTS",
+                    "value": 100.0
+                },
+                "marketOrderPreference": "AVAILABLE_DEFAULT_OFF"
+            }
+
+        Instrument data example::
+
+            {
+                "epic": "UA.D.AAPL.DAILY.IP",
+                "expiry": "DFB",
+                "name": "Apple Inc (All Sessions)",
+                "forceOpenAllowed": true,
+                "stopsLimitsAllowed": true,
+                "lotSize": 1.0,
+                "unit": "AMOUNT",
+                "type": "SHARES",
+                "controlledRiskAllowed": true,
+                "streamingPricesAvailable": false,
+                "marketId": "AAPL-US",
+                "currencies": [
+                    {
+                        "code": "$.",
+                        "name": "USD",
+                        "symbol": "$",
+                        "baseExchangeRate": 1.384415,
+                        "exchangeRate": 0.77,
+                        "isDefault": false
+                    },
+                    {
+                        "code": "#.",
+                        "name": "GBP",
+                        "symbol": "\u00a3",
+                        "baseExchangeRate": 1.0,
+                        "exchangeRate": 1.0,
+                        "isDefault": true
+                    }
+                ],
+                "marginDepositBands": [
+                    {
+                        "min": 0,
+                        "max": 324,
+                        "margin": 20
+                    },
+                    {
+                        "min": 324,
+                        "max": 1782,
+                        "margin": 20
+                    },
+                    {
+                        "min": 1782,
+                        "max": 5184,
+                        "margin": 40
+                    },
+                    {
+                        "min": 5184,
+                        "max": null,
+                        "margin": 75
+                    }
+                ],
+                "margin": 20.0,
+                "slippageFactor": {
+                    "unit": "pct",
+                    "value": 100.0
+                },
+                "openingHours": {
+                    "marketTimes": [
+                        {
+                            "openTime": "09:00",
+                            "closeTime": "01:00"
+                        }
+                    ]
+                },
+                "expiryDetails": {
+                    "lastDealingDate": "06/04/29 21:00",
+                    "settlementInfo": "DFBs settle on the Last Dealing Day at the closing market bid/offer price
+                                       of the share, plus or minus half the IG spread. "
+                },
+                "rolloverDetails": null,
+                "newsCode": "AAPL.O",
+                "chartCode": "AAPL",
+                "country": "US",
+                "valueOfOnePip": null,
+                "onePipMeans": null,
+                "contractSize": null,
+                "specialInfo": [
+                    "MIN KNOCK OUT LEVEL DISTANCE",
+                    "MAX KNOCK OUT LEVEL DISTANCE",
+                    "DEFAULT KNOCK OUT LEVEL DISTANCE",
+                    "Please note US (All Sessions) shares close early at 22:00 UK time on Friday evenings."
+                ]
+            }
+
+        Snapshot data example::
+
+            {
+                "marketStatus": "EDITS_ONLY",
+                "netChange": -46,
+                "percentageChange": -0.34,
+                "updateTime": "21:59:15",
+                "delayTime": 0,
+                "bid": 13398.0,
+                "offer": 13411.0,
+                "high": 13498.0,
+                "low": 13324.0,
+                "binaryOdds": null,
+                "decimalPlacesFactor": 1,
+                "scalingFactor": 1,
+                "controlledRiskExtraSpread": 0
+            }
+
+
         :param instrument: Instrument to retrieve. Possible options:
-        
+
                            - IG Index specific instrument identifier (EPIC) as :class:`str`
                            - Existing instrument data structure, :class:`IGInstrument`
         :return: A fully populated instance of :class:`IGInstrument`
         :rtype: IGInstrument
         """
 
-        instrument_data = {"dealing_rules": {}, "instrument": {}, "snapshot": {}}
-
+        epic = instrument if type(instrument) is str else instrument.instrument["epic"]
+        url = urljoin(f"{self._api.markets_url}/", epic)
+        req = self._authenticated_request(url=url, method="get")
+        instrument_data = {
+            "dealing_rules": req.data["dealingRules"],
+            "instrument": req.data["instrument"],
+            "snapshot": req.data["snapshot"],
+        }
         return IGInstrument(**instrument_data)

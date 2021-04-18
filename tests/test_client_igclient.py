@@ -1,8 +1,9 @@
 import time
 import pytest
 import requests
+from urllib.parse import urljoin
 from pygindex.client import IGClient, IGAPIConfig, IGUserAuth, \
-    IGResponse, IGSession
+    IGResponse, IGSession, IGInstrument
 
 
 @pytest.fixture(scope="module")
@@ -156,3 +157,23 @@ def test_search_markets(mocker, ig_client):
                                                         method="get",
                                                         data={"searchTerm": "test"})
     assert data == {"d_key": "d_val"}
+
+
+def test_get_single_instrument(mocker, ig_client):
+    """Test searching markets from correct URL, and passing data back
+    """
+    mock_ret = IGResponse(data={"dealingRules": {},
+                                "instrument": {},
+                                "snapshot": {}
+                                },
+                          headers={"h_key": "h_val"}
+                          )
+    mocker.patch.object(ig_client, "_authenticated_request", return_value=mock_ret)
+    url = urljoin(f"{ig_client._api.markets_url}/", "test_epic")
+    data = ig_client.get_instrument("test_epic")
+    ig_client._authenticated_request.assert_called_with(url=url,
+                                                        method="get")
+    assert isinstance(data, IGInstrument)
+    assert hasattr(data, "dealing_rules")
+    assert hasattr(data, "instrument")
+    assert hasattr(data, "snapshot")
