@@ -7,6 +7,13 @@ API
 Client
 ------
 
+Price Resolution Settings
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: IGPriceResolution
+   :members:
+   :inherited-members:
+
 User Authentication Data Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

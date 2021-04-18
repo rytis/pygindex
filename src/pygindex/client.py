@@ -2,10 +2,33 @@
 
 import os
 import time
+from enum import Enum, unique
 from urllib.parse import urljoin
 from dataclasses import dataclass, field, fields
 from typing import Dict, Union
 import requests
+
+
+@unique
+class IGPriceResolution(Enum):
+    """Set of values defining available resolution settings
+    when requesting historical price data
+    """
+    SECOND = "SECOND"
+    HOUR = "HOUR"
+    HOUR_2 = "HOUR_2"
+    HOUR_3 = "HOUR_3"
+    HOUR_4 = "HOUR_4"
+    DAY = "DAY"
+    WEEK = "WEEK"
+    MONTH = "MONTH"
+    MINUTE = "MINUTE"
+    MINUTE_2 = "MINUTE_2"
+    MINUTE_3 = "MINUTE_3"
+    MINUTE_5 = "MINUTE_5"
+    MINUTE_10 = "MINUTE_10"
+    MINUTE_15 = "MINUTE_15"
+    MINUTE_30 = "MINUTE_30"
 
 
 @dataclass
