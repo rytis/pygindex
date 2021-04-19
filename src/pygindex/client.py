@@ -1,5 +1,4 @@
 """Client module"""
-
 import os
 import time
 from datetime import datetime
@@ -725,6 +724,81 @@ class IGClient:
     ) -> IGInstrumentPrices:
         """Retrieve historical data for the given instrument
 
+        Example::
+
+            c = IGClient()
+            i = c.get_instrument("UA.D.AAPL.DAILY.IP")
+            p = c.get_prices(i,
+                             resolution=IGPriceResolution.HOUR_4,
+                             start_time=datetime.now() - timedelta(days=1),
+                             end_time=datetime.now())
+
+        Produces the following data:
+
+        Instrument type::
+
+            "SHARES"
+
+        Metadata::
+
+            {
+                "response": {
+                    "allowance": {
+                        "remainingAllowance": 9881,
+                        "totalAllowance": 10000,
+                        "allowanceExpiry": 597200
+                    },
+                    "size": 4,
+                    "pageData": {
+                        "pageSize": 4,
+                        "pageNumber": 1,
+                        "totalPages": 1
+                    }
+                }
+            }
+
+        Price data::
+
+            [
+                {
+                    "snapshotTime": "2021/04/19 08:00:00",
+                    "snapshotTimeUTC": "2021-04-19T07:00:00",
+                    "openPrice": {
+                        "bid": 13315.0,
+                        "ask": 13444.0,
+                        "lastTraded": null
+                    },
+                    "closePrice": {
+                        "bid": 13391.0,
+                        "ask": 13412.0,
+                        "lastTraded": null
+                    },
+                    "highPrice": {
+                        "bid": 13437.0,
+                        "ask": 13448.0,
+                        "lastTraded": null
+                    },
+                    "lowPrice": {
+                        "bid": 13315.0,
+                        "ask": 13380.0,
+                        "lastTraded": null
+                    },
+                    "lastTradedVolume": 63705
+                },
+                {
+                    "snapshotTime": "2021/04/19 12:00:00",
+                    <...>
+                },
+                {
+                    "snapshotTime": "2021/04/19 16:00:00",
+                    <...>
+                },
+                {
+                    "snapshotTime": "2021/04/19 20:00:00",
+                    <...>
+                }
+            ]
+
         :param instrument: Instrument to get the price data for
         :type instrument: IGInstrument
         :param resolution: Resolution of the price data
@@ -739,4 +813,24 @@ class IGClient:
         :rtype: IGInstrumentPrices
         """
 
-        return IGInstrumentPrices(instrument, "", {}, [])
+        epic = instrument.instrument["epic"]
+        url = urljoin(f"{self._api.prices_url}/", epic)
+        payload = {
+            "resolution": resolution.value,
+            "pageSize": 0,
+        }
+        if start_time and end_time:
+            payload["from"] = start_time.isoformat(timespec="seconds")
+            payload["to"] = end_time.isoformat(timespec="seconds")
+        elif max_data_points:
+            payload["max"] = max_data_points
+        req = self._authenticated_request(
+            url=url, method="get", data=payload, headers={"version": "3"}
+        )
+        data = {
+            "instrument": instrument,
+            "instrument_type": req.data["instrumentType"],
+            "metadata": {"response": req.data["metadata"]},
+            "prices": req.data["prices"],
+        }
+        return IGInstrumentPrices(**data)

@@ -3,7 +3,8 @@ import pytest
 import requests
 from urllib.parse import urljoin
 from pygindex.client import IGClient, IGAPIConfig, IGUserAuth, \
-    IGResponse, IGSession, IGInstrument
+    IGResponse, IGSession, IGInstrument, IGInstrumentPrices, \
+    IGPriceResolution
 
 
 @pytest.fixture(scope="module")
@@ -177,3 +178,37 @@ def test_get_single_instrument(mocker, ig_client):
     assert hasattr(data, "dealing_rules")
     assert hasattr(data, "instrument")
     assert hasattr(data, "snapshot")
+
+
+def test_get_prices(mocker, ig_client):
+    """Test making a call to IG Index prices API URL and passing data back
+    """
+
+    mock_ret = IGResponse(data={"instrumentType": "instrument_type",
+                                "metadata": {},
+                                "prices": []
+                                },
+                          headers={"h_key": "h_val"}
+                          )
+
+    # mock_ret = IGInstrumentPrices(
+    #     instrument=IGInstrument(dealing_rules={}, instrument={}, snapshot={}),
+    #     instrument_type="type",
+    #     metadata={"response": {}},
+    #     prices=[]
+    # )
+    instrument = IGInstrument(dealing_rules={}, instrument={"epic": "test_epic"}, snapshot={})
+    req_data = {
+        "resolution": IGPriceResolution.MINUTE.value,
+        "pageSize": 0,
+    }
+    mocker.patch.object(ig_client, "_authenticated_request")
+    url = urljoin(f"{ig_client._api.prices_url}/", "test_epic")
+    data = ig_client.get_prices(instrument=instrument)
+    ig_client._authenticated_request.assert_called_with(url=url,
+                                                        method="get",
+                                                        headers={"version": "3"},
+                                                        data=req_data
+                                                        )
+    assert isinstance(data, IGInstrumentPrices)
+
