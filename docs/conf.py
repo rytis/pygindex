@@ -33,6 +33,7 @@ release = '0.0.3'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'enum_tools.autoenum',
 ]
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),

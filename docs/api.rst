@@ -10,7 +10,7 @@ Client
 Price Resolution Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: IGPriceResolution
+.. autoenum:: IGPriceResolution
    :members:
    :inherited-members:
 
