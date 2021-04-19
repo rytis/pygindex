@@ -2,6 +2,7 @@
 
 import os
 import time
+from datetime import datetime
 from enum import Enum, unique
 from urllib.parse import urljoin
 from dataclasses import dataclass, field, fields
@@ -259,6 +260,16 @@ class IGInstrument:
     dealing_rules: dict
     instrument: dict
     snapshot: dict
+
+
+@dataclass
+class IGInstrumentPrices:
+    """Dataclass to hold price data structure"""
+
+    instrument: IGInstrument
+    instrument_type: str
+    metadata: dict
+    prices: list
 
 
 class IGClient:
@@ -703,3 +714,29 @@ class IGClient:
             "snapshot": req.data["snapshot"],
         }
         return IGInstrument(**instrument_data)
+
+    def get_prices(
+        self,
+        instrument: IGInstrument,
+        resolution: IGPriceResolution = IGPriceResolution.MINUTE,
+        start_time: datetime = None,
+        end_time: datetime = None,
+        max_data_points: int = None,
+    ) -> IGInstrumentPrices:
+        """Retrieve historical data for the given instrument
+
+        :param instrument: Instrument to get the price data for
+        :type instrument: IGInstrument
+        :param resolution: Resolution of the price data
+        :type resolution: IGPriceResolution
+        :param start_time: Start time of the lookup date range
+        :type start_time: datetime.datetime
+        :param end_time: End time of the lookup date range
+        :type end_time: datetime.datetime
+        :param max_data_points: Maximum data points to fetch. This is ignored if date range is specified
+        :type max_data_points: int
+        :return: Data structure that holds retrieved instrument prices
+        :rtype: IGInstrumentPrices
+        """
+
+        return IGInstrumentPrices(instrument, "", {}, [])
