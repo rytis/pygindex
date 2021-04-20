@@ -2,7 +2,7 @@
 import random
 import string
 import pytest
-from pygindex.client import IGUserAuth
+from pygindex.models import IGUserAuth
 
 
 def random_str(length=10):

@@ -3,77 +3,10 @@ import os
 import time
 from datetime import datetime
 from urllib.parse import urljoin
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field
 from typing import Dict, Union
 import requests
-from pygindex.models import IGPriceResolution
-
-
-@dataclass
-class IGUserAuth:
-    """Dataclass to hold User Authentication data
-
-    Configuration can be provided during initialisation,
-    alternatively the following environment variables
-    will be looked up if no arguments were provided:
-    :data:`IG_{UPPERCASE_PARAM_NAME}`, for example: :data:`IG_API_KEY`
-
-    :param api_key: API key
-    :type api_key: str
-    :param username: Username
-    :type username: str
-    :param password: Password
-    :type password: str
-    """
-
-    api_key: str = None
-    username: str = None
-    password: str = None
-
-    def __post_init__(self):
-        """Attempt to fill in configuration from env vars"""
-        for fld in fields(self):
-            if getattr(self, fld.name) is None:
-                env_var_name = "IG_{}".format(fld.name.upper())
-                if env_var_name not in os.environ:
-                    raise ValueError(
-                        f"Required argument '{fld.name}' or environment "
-                        f"variable '{env_var_name}' not set"
-                    )
-                setattr(self, fld.name, os.environ[env_var_name])
-
-    @property
-    def auth_req_headers(self) -> Dict[str, str]:
-        """Construct authentication headers
-
-        These headers need to be sent with every request made to
-        IG Index API
-
-        :returns: Dictionary containing required authentication headers
-        :rtype: dict
-        """
-        headers = {
-            "X-IG-API-KEY": self.api_key,
-            "Content-Type": "application/json",
-        }
-        return headers
-
-    @property
-    def auth_req_data(self) -> Dict[str, str]:
-        """Construct Authentication data
-
-        Constructs authentication data that will be used to obtain
-        authentication key from IG Index API
-
-        :returns: Dictionary containing authentication details
-        :rtype: dict
-        """
-        data = {
-            "identifier": self.username,
-            "password": self.password,
-            "encryptedPassword": None,
-        }
-        return data
+from pygindex.models import IGPriceResolution, IGUserAuth
 
 
 @dataclass
@@ -236,7 +169,7 @@ class IGClient:
     """This is a class implementing basic IG Index API Client actions.
 
     :param auth: User authentication details
-    :type auth: :class:`IGUserAuth`
+    :type auth: :class:`pygindex.models.IGUserAuth`
     :param api_config: API configuration details
     :type api_config: :class:`IGAPIConf`
     """

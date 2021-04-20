@@ -11,13 +11,6 @@ API
 Client
 ------
 
-User Authentication Data Object
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: IGUserAuth
-   :members:
-   :inherited-members:
-
 IG API Configuration Data Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

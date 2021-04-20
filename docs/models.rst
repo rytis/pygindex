@@ -10,3 +10,10 @@ Price Resolution Settings
    :members:
    :inherited-members:
 
+User Authentication Data Object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: IGUserAuth
+   :members:
+   :inherited-members:
+
