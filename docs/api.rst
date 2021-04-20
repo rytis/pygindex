@@ -11,13 +11,6 @@ API
 Client
 ------
 
-Instrument Data Object
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: IGInstrument
-   :members:
-   :inherited-members:
-
 Instrument Historical Price Data Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
