@@ -5,21 +5,13 @@ from urllib.parse import urljoin
 from dataclasses import dataclass
 from typing import Dict, Union
 import requests
-from pygindex.models import IGPriceResolution, IGUserAuth, IGAPIConfig, IGSession
-
-
-@dataclass
-class IGResponse:
-    """Dataclass to hold request Response data
-
-    :param data: Response data
-    :type data: dict
-    :param headers: Response headers
-    :type headers: dict
-    """
-
-    data: Dict
-    headers: Dict
+from pygindex.models import (
+    IGPriceResolution,
+    IGUserAuth,
+    IGAPIConfig,
+    IGSession,
+    IGResponse,
+)
 
 
 @dataclass

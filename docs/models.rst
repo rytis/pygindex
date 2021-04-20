@@ -31,3 +31,10 @@ Session Data Object
    :members:
    :inherited-members:
 
+Response Data Object
+~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: IGResponse
+   :members:
+   :inherited-members:
+

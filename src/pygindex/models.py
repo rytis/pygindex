@@ -214,3 +214,17 @@ class IGSession:
     cst: str = None
     security_token: str = None
     expires: int = 0
+
+
+@dataclass
+class IGResponse:
+    """Dataclass to hold request Response data
+
+    :param data: Response data
+    :type data: dict
+    :param headers: Response headers
+    :type headers: dict
+    """
+
+    data: Dict
+    headers: Dict

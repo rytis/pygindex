@@ -11,13 +11,6 @@ API
 Client
 ------
 
-Response Data Object
-~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: IGResponse
-   :members:
-   :inherited-members:
-
 Instrument Data Object
 ~~~~~~~~~~~~~~~~~~~~~~
 
