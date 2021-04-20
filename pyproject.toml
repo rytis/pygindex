@@ -31,4 +31,4 @@ documentation = "https://pygindex.readthedocs.io/en/latest/"
 source = "https://github.com/rytis/pygindex/"
 
 [project.scripts]
-flit = "flit:main"
+pygi = "pygindex:cli.main"
