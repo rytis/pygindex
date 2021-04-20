@@ -11,13 +11,6 @@ API
 Client
 ------
 
-IG API Configuration Data Object
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: IGAPIConfig
-   :members:
-   :inherited-members:
-
 Session Data Object
 ~~~~~~~~~~~~~~~~~~~
 

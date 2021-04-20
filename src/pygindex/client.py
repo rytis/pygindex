@@ -1,98 +1,11 @@
 """Client module"""
-import os
 import time
 from datetime import datetime
 from urllib.parse import urljoin
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, Union
 import requests
-from pygindex.models import IGPriceResolution, IGUserAuth
-
-
-@dataclass
-class IGAPIConfig:
-    """Dataclass for API configuration
-
-    Configuration is provided during initialisation, otherwise, if no
-    value is specified we will try to look up environment variable
-    called :data:`IG_PLATFORM`.
-
-    :param platform: Specify what platform to use. Available options are
-                     :data:`live` - to access live trading platform, or
-                     :data:`demo` - to access demo trading platform
-    :type platform: str
-    :param base_url: The value is resolved based on the ``platform`` value.
-    :type base_url: str
-    """
-
-    platform: str = None
-    base_url: str = field(init=False)
-
-    def __post_init__(self):
-        """Attempt to fill in configuration from env vars"""
-        platform_urls = {
-            "live": "https://api.ig.com/gateway/deal",
-            "demo": "https://demo-api.ig.com/gateway/deal",
-        }
-        if self.platform is None:
-            self.platform = os.environ.get("IG_PLATFORM", default="live")
-        if self.platform not in platform_urls.keys():
-            raise ValueError(
-                f"Unknown platform type: {self.platform} "
-                f"(valid options: 'live', 'demo')"
-            )
-        self.base_url = platform_urls[self.platform]
-
-    @property
-    def session_url(self) -> str:
-        """Return IG Index API Session URL
-
-        :returns: Session API URL
-        :rtype: str
-        """
-        return f"{self.base_url}/session"
-
-    @property
-    def accounts_url(self) -> str:
-        """Return IG Index API Accounts URL
-
-        :returns: Accounts API URL
-        :rtype: str
-        """
-        return f"{self.base_url}/accounts"
-
-    @property
-    def positions_url(self) -> str:
-        """Returns IG Index API Positions URL
-
-        :returns: Positions API URL
-        :rtype: str
-        """
-        return f"{self.base_url}/positions"
-
-    @property
-    def markets_url(self) -> str:
-        """Returns IG Index API Markets URL
-
-        This endpoint is used for multiple purposes:
-
-            * Lookup details of a selection of epics
-            * Lookup details of individual epic
-            * Search for epics
-
-        :returns: Markets API URL
-        :rtype: str
-        """
-        return f"{self.base_url}/markets"
-
-    @property
-    def prices_url(self) -> str:
-        """Returns IG Index Prices URL
-
-        :return: Prices API URL
-        :rtype: str
-        """
-        return f"{self.base_url}/prices"
+from pygindex.models import IGPriceResolution, IGUserAuth, IGAPIConfig
 
 
 @dataclass

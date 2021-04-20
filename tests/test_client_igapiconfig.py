@@ -1,5 +1,5 @@
 import pytest
-from pygindex.client import IGAPIConfig
+from pygindex.models import IGAPIConfig
 
 
 def test_valid_env_var(monkeypatch):

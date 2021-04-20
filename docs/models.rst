@@ -17,3 +17,10 @@ User Authentication Data Object
    :members:
    :inherited-members:
 
+IG API Configuration Data Object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: IGAPIConfig
+   :members:
+   :inherited-members:
+
