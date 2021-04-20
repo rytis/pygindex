@@ -3,16 +3,13 @@ API
 
 .. module:: pygindex.client
 
+.. toctree::
+   :maxdepth: 2
 
+   models
+	    
 Client
 ------
-
-Price Resolution Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoenum:: IGPriceResolution
-   :members:
-   :inherited-members:
 
 User Authentication Data Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

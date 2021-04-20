@@ -3,8 +3,8 @@ import pytest
 import requests
 from urllib.parse import urljoin
 from pygindex.client import IGClient, IGAPIConfig, IGUserAuth, \
-    IGResponse, IGSession, IGInstrument, IGInstrumentPrices, \
-    IGPriceResolution
+    IGResponse, IGSession, IGInstrument, IGInstrumentPrices
+from pygindex.models import IGPriceResolution
 
 
 @pytest.fixture(scope="module")
