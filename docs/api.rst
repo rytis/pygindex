@@ -11,13 +11,6 @@ API
 Client
 ------
 
-Session Data Object
-~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: IGSession
-   :members:
-   :inherited-members:
-
 Response Data Object
 ~~~~~~~~~~~~~~~~~~~~
 

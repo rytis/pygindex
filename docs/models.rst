@@ -24,3 +24,10 @@ IG API Configuration Data Object
    :members:
    :inherited-members:
 
+Session Data Object
+~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: IGSession
+   :members:
+   :inherited-members:
+

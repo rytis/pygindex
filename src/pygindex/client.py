@@ -5,27 +5,7 @@ from urllib.parse import urljoin
 from dataclasses import dataclass
 from typing import Dict, Union
 import requests
-from pygindex.models import IGPriceResolution, IGUserAuth, IGAPIConfig
-
-
-@dataclass
-class IGSession:
-    """Dataclass to hold Session data
-
-    All values are retrieved after making an authentication
-    call to IG Index API
-
-    :param cst: CST
-    :type cst: str
-    :param security_token: Security token
-    :type security_token: str
-    :param expires: Expiration timestamp
-    :type expires: int
-    """
-
-    cst: str = None
-    security_token: str = None
-    expires: int = 0
+from pygindex.models import IGPriceResolution, IGUserAuth, IGAPIConfig, IGSession
 
 
 @dataclass

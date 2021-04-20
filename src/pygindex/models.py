@@ -194,3 +194,23 @@ class IGAPIConfig:
         :rtype: str
         """
         return f"{self.base_url}/prices"
+
+
+@dataclass
+class IGSession:
+    """Dataclass to hold Session data
+
+    All values are retrieved after making an authentication
+    call to IG Index API
+
+    :param cst: CST
+    :type cst: str
+    :param security_token: Security token
+    :type security_token: str
+    :param expires: Expiration timestamp
+    :type expires: int
+    """
+
+    cst: str = None
+    security_token: str = None
+    expires: int = 0
