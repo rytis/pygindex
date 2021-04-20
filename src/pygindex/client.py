@@ -2,7 +2,6 @@
 import time
 from datetime import datetime
 from urllib.parse import urljoin
-from dataclasses import dataclass
 from typing import Dict, Union
 import requests
 from pygindex.models import (
@@ -12,17 +11,8 @@ from pygindex.models import (
     IGSession,
     IGResponse,
     IGInstrument,
+    IGInstrumentPrices,
 )
-
-
-@dataclass
-class IGInstrumentPrices:
-    """Dataclass to hold price data structure"""
-
-    instrument: IGInstrument
-    instrument_type: str
-    metadata: dict
-    prices: list
 
 
 class IGClient:

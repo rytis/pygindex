@@ -2,8 +2,9 @@ import time
 import pytest
 import requests
 from urllib.parse import urljoin
-from pygindex.client import IGClient, IGInstrumentPrices
-from pygindex.models import IGPriceResolution, IGUserAuth, IGAPIConfig, IGSession, IGResponse, IGInstrument
+from pygindex.client import IGClient
+from pygindex.models import IGPriceResolution, IGUserAuth, IGAPIConfig, IGSession, IGResponse, IGInstrument, \
+    IGInstrumentPrices
 
 
 @pytest.fixture(scope="module")

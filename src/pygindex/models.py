@@ -254,3 +254,13 @@ class IGInstrument:
     dealing_rules: dict
     instrument: dict
     snapshot: dict
+
+
+@dataclass
+class IGInstrumentPrices:
+    """Dataclass to hold price data structure"""
+
+    instrument: IGInstrument
+    instrument_type: str
+    metadata: dict
+    prices: list
