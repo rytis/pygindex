@@ -1,5 +1,8 @@
 """Command line interface"""
 
+import sys
 
-def main():
+
+def app():
     print("Hello!!")
+    sys.exit(0)
