@@ -4,22 +4,21 @@ import os
 import yaml
 
 
-class Configuration:
+class Configuration(dict):
     """Manage configuration"""
 
-    def __init__(self, cfg_file="~/.pygindex.yaml"):
-        self._config = self._get_config(os.path.expanduser(cfg_file))
+    def __init__(self):
+        super().__init__()
 
-    def _get_config(self, cfg_file):
-        """Generate configuration object"""
-        config = self._config_from_file(cfg_file)
-        return config
-
-    def _config_from_file(self, path):
-        """Reads configuration from file"""
+    @classmethod
+    def from_file(cls, path="~/.pygindex.yaml"):
+        path = os.path.expanduser(path)
         try:
             with open(path, "r") as file:
                 config = yaml.safe_load(file)
         except FileNotFoundError:
             config = {}
-        return config
+        obj = cls()
+        for key, value in config.items():
+            obj[key] = value
+        return obj
