@@ -3,6 +3,24 @@
 import argparse
 import sys
 from .utils import Configuration
+from .utils import MethodLabelDecorator
+
+
+cli_command = MethodLabelDecorator("cli_command")
+
+
+class GenericCommand:
+    pass
+
+
+class InstrumentCommand(GenericCommand):
+    @cli_command
+    def get(self):
+        print("instrument get")
+
+    @cli_command
+    def details(self):
+        print("instrument details")
 
 
 def build_parser():
