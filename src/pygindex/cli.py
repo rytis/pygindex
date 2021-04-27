@@ -3,20 +3,25 @@
 import argparse
 import sys
 from .utils import Configuration
-from .utils import MethodLabelDecorator
+from .utils import method_label
 
 
-cli_command = MethodLabelDecorator("cli_command")
+cli_command = method_label("_cli_command")
 
 
-class GenericCommand:
-    pass
+class GenericCommand(type):
+    def __new__(cls, *args, **kwargs):
+        args[2].setdefault("cli_name", args[0].lower())
+        cls_inst = super().__new__(cls, *args, **kwargs)
+        return cls_inst
 
 
-class InstrumentCommand(GenericCommand):
+class InstrumentCommand(metaclass=GenericCommand):
+    cli_name = "instrument"
+
     @cli_command
     def get(self):
-        print("instrument get")
+        print(f">> instrument get {self}")
 
     @cli_command
     def details(self):

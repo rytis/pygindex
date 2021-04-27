@@ -2,12 +2,16 @@
 """
 import functools
 import os
+import uuid
 import yaml
 
 
-class MethodLabelDecorator:
-    def __init__(self, label):
-        self._label = label
+class AttributeInjectorDecorator:
+
+    _label = None
+
+    def __init__(self, fn):
+        self.fn = fn
 
     def __set_name__(self, owner, name):
         if hasattr(owner, self._label):
@@ -15,12 +19,22 @@ class MethodLabelDecorator:
         else:
             setattr(owner, self._label, [name])
 
-    def __call__(self, func):
-        @functools.wraps(func)
-        def wrapped(*args, **kwargs):
-            return func(self, *args, **kwargs)
+    def __get__(self, instance, owner):
+        return functools.partial(self, instance)
 
-        return wrapped
+    def __call__(self, *args, **kwargs):
+        return self.fn(*args, **kwargs)
+
+    @classmethod
+    def build_decorator_class(cls, label):
+        cls_name = f"{cls.__name__}-{uuid.uuid4().hex[:5]}"
+        attrs = dict(cls.__dict__)
+        attrs["_label"] = label
+        return type(cls_name, (cls,), attrs)
+
+
+def method_label(label):
+    return AttributeInjectorDecorator.build_decorator_class(label)
 
 
 class Configuration(dict):
