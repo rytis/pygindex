@@ -1,12 +1,15 @@
 """Command line interface"""
 
 import argparse
+import functools
 import sys
 from .utils import Configuration
-from .utils import method_label
+from .utils import PluggableDecorator, method_labeler
 
 
-cli_command = method_label("_cli_command")
+cli_command = PluggableDecorator.build_decorator_class(
+    set_name_callback=functools.partialmethod(method_labeler, label="_cli_command")
+)
 
 
 class GenericCommand(type):

@@ -6,18 +6,21 @@ import uuid
 import yaml
 
 
-class AttributeInjectorDecorator:
+def method_labeler(obj, owner, name, label):
+    if hasattr(owner, label):
+        getattr(owner, label).append(name)
+    else:
+        setattr(owner, label, [name])
 
-    _label = None
+
+class PluggableDecorator:
+    _set_name_callback = None
 
     def __init__(self, fn):
         self.fn = fn
 
     def __set_name__(self, owner, name):
-        if hasattr(owner, self._label):
-            getattr(owner, self._label).append(name)
-        else:
-            setattr(owner, self._label, [name])
+        self._set_name_callback(owner, name)
 
     def __get__(self, instance, owner):
         return functools.partial(self, instance)
@@ -26,15 +29,10 @@ class AttributeInjectorDecorator:
         return self.fn(*args, **kwargs)
 
     @classmethod
-    def build_decorator_class(cls, label):
+    def build_decorator_class(cls, set_name_callback):
         cls_name = f"{cls.__name__}-{uuid.uuid4().hex[:5]}"
-        attrs = dict(cls.__dict__)
-        attrs["_label"] = label
-        return type(cls_name, (cls,), attrs)
-
-
-def method_label(label):
-    return AttributeInjectorDecorator.build_decorator_class(label)
+        cls._set_name_callback = set_name_callback
+        return type(cls_name, (cls,), dict(cls.__dict__))
 
 
 class Configuration(dict):
