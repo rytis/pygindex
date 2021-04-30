@@ -12,23 +12,31 @@ cli_command = PluggableDecorator.build_decorator_class(
 )
 
 
-class GenericCommand(type):
-    def __new__(cls, *args, **kwargs):
-        args[2].setdefault("cli_name", args[0].lower())
-        cls_inst = super().__new__(cls, *args, **kwargs)
-        return cls_inst
+def default_name(cls):
+    if not hasattr(cls, "cli_name"):
+        setattr(cls, "cli_name", cls.__name__.lower().rstrip("command"))
+    return cls
 
 
-class InstrumentCommand(metaclass=GenericCommand):
-    cli_name = "instrument"
+class GenericCommand:
+    pass
+
+
+@default_name
+class InstrumentCommand(GenericCommand):
 
     @cli_command
     def get(self):
-        print(f">> instrument get {self}")
+        print("instrument get")
 
     @cli_command
     def details(self):
         print("instrument details")
+
+
+def register_command_parsers(root_subparser):
+    for command_cls in GenericCommand.__subclasses__():
+        print(f"{command_cls}")
 
 
 def build_parser():
@@ -37,6 +45,8 @@ def build_parser():
         description="Command line utility to interact with IG Index trading platform",
     )
     subparsers = parser.add_subparsers(dest="object", required=True)
+
+    register_command_parsers(subparsers)
 
     # ** instrument **
     parser_instrument = subparsers.add_parser("instrument", help="Instruments")
