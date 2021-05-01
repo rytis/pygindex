@@ -34,9 +34,7 @@ class PluggableDecorator:
         return self.fn(*args, **kwargs)
 
     @classmethod
-    def build_decorator_class(cls,
-                              set_name_callback,
-                              pre_exec_callback=None):
+    def build_decorator_class(cls, set_name_callback, pre_exec_callback=None):
         cls_name = f"{cls.__name__}-{uuid.uuid4().hex[:5]}"
         cls._set_name_callback = set_name_callback
         return type(cls_name, (cls,), dict(cls.__dict__))

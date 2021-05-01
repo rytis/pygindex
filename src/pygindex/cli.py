@@ -65,13 +65,15 @@ class PositionsCommand(GenericCommand):
 def register_command_parsers(cls, root_subparser):
     dispatch_map = {}
     for command_cls in cls.__subclasses__():
-        parser_cmd = root_subparser.add_parser(command_cls.cli_name,
-                                               help=command_cls.__doc__)
+        parser_cmd = root_subparser.add_parser(
+            command_cls.cli_name, help=command_cls.__doc__
+        )
         subparsers_cmd = parser_cmd.add_subparsers(dest="command", required=True)
         for action in command_cls._cli_command:
             obj, action = command_cls.cli_name, action
-            parser_action = subparsers_cmd.add_parser(action,
-                                                      help=getattr(command_cls, action).__doc__)
+            parser_action = subparsers_cmd.add_parser(
+                action, help=getattr(command_cls, action).__doc__
+            )
             dispatch_map[(obj, action)] = getattr(command_cls(), action)(parser_action)
     return dispatch_map
 
@@ -96,7 +98,9 @@ def parse_args(parser):
 
 def dispatch_command(args, dispatch_map):
     key = (args.object, args.command)
-    cmd_args = {k: v for k, v in args.__dict__.items() if k not in ["object", "command"]}
+    cmd_args = {
+        k: v for k, v in args.__dict__.items() if k not in ["object", "command"]
+    }
     dispatch_map[key](**cmd_args)
 
 
@@ -107,5 +111,5 @@ def app():
 
     dispatch_command(args, dispatch_map)
 
-    conf = Configuration.from_file()
+    _ = Configuration.from_file()
     sys.exit(0)
