@@ -31,17 +31,15 @@ class InstrumentCommand(GenericCommand):
     @cli_command
     def get(self, parser):
         """Get instrument details"""
-        print("register instrument get")
         parser.add_argument("name", help="Instrument name")
         return self._get
 
-    def _get(self):
-        print("process instrument get")
+    def _get(self, name):
+        print(f"process instrument get ({name})")
 
     @cli_command
     def search(self, parser):
         """Search for instrument"""
-        print("register instrument search")
         parser.add_argument("term", help="Search term")
         return self._search
 
@@ -57,7 +55,6 @@ class PositionsCommand(GenericCommand):
     @cli_command
     def get(self, parser):
         """Get all positions"""
-        print("register positions get")
         parser.add_argument("--all", help="Get all")
         return self._get
 
@@ -70,10 +67,7 @@ def register_command_parsers(cls, root_subparser):
     for command_cls in cls.__subclasses__():
         parser_cmd = root_subparser.add_parser(command_cls.cli_name,
                                                help=command_cls.__doc__)
-        subparsers_cmd = parser_cmd.add_subparsers(
-            dest=f"{command_cls.cli_name}_command",
-            required=True
-        )
+        subparsers_cmd = parser_cmd.add_subparsers(dest="command", required=True)
         for action in command_cls._cli_command:
             obj, action = command_cls.cli_name, action
             parser_action = subparsers_cmd.add_parser(action,
@@ -82,53 +76,36 @@ def register_command_parsers(cls, root_subparser):
     return dispatch_map
 
 
-def build_parser():
+def init_parser():
     parser = argparse.ArgumentParser(
         prog="pygi",
         description="Command line utility to interact with IG Index trading platform",
     )
-    subparsers = parser.add_subparsers(dest="object", required=True)
+    subparser = parser.add_subparsers(dest="object", required=True)
+    return parser, subparser
 
-    dispatch_map = register_command_parsers(GenericCommand, subparsers)
-    print(dispatch_map)
 
-    # # ** instrument **
-    # parser_instrument = subparsers.add_parser("instrument", help="Instruments")
-    # subparsers_instrument = parser_instrument.add_subparsers(
-    #     dest="instrument_command", required=True
-    # )
-    # # instrument -> search
-    # parser_instrument_search = subparsers_instrument.add_parser(
-    #     "search", help="Search for markets"
-    # )
-    # parser_instrument_search.add_argument("term", type=str, help="Search term")
-    # # instrument -> get
-    # parser_instrument_get = subparsers_instrument.add_parser(
-    #     "get", help="Get instrument details"
-    # )
-    # parser_instrument_get.add_argument("name", type=str, help="Instrument name")
-    #
-    # # ** positions **
-    # parser_positions = subparsers.add_parser("positions", help="Manage open positions")
-    # subparsers_positions = parser_positions.add_subparsers(
-    #     dest="positions_command", required=True
-    # )
-    # # positions -> get
-    # parser_positions_get = subparsers_positions.add_parser(
-    #     "get", help="Get open positions"
-    # )
-    # parser_positions_get.add_argument("--all")
-
-    return parser
+def build_dispatch_map(parser):
+    dispatch_map = register_command_parsers(GenericCommand, parser)
+    return dispatch_map
 
 
 def parse_args(parser):
     return parser.parse_args()
 
 
+def dispatch_command(args, dispatch_map):
+    key = (args.object, args.command)
+    cmd_args = {k: v for k, v in args.__dict__.items() if k not in ["object", "command"]}
+    dispatch_map[key](**cmd_args)
+
+
 def app():
-    args = parse_args(build_parser())
+    parser, subparser = init_parser()
+    dispatch_map = build_dispatch_map(subparser)
+    args = parse_args(parser)
+
+    dispatch_command(args, dispatch_map)
+
     conf = Configuration.from_file()
-    print(args)
-    print(conf)
     sys.exit(0)
