@@ -12,17 +12,17 @@ cli_command = PluggableDecorator.build_decorator_class(
 )
 
 
-def default_name(cls):
-    if not hasattr(cls, "cli_name"):
-        setattr(cls, "cli_name", cls.__name__.lower().rstrip("command"))
-    return cls
+class CommandMeta(type):
+    def __new__(cls, *args, **kwargs):
+        args[2].setdefault("cli_name", args[0].lower())
+        cls_inst = super().__new__(cls, *args, **kwargs)
+        return cls_inst
 
 
-class GenericCommand:
+class GenericCommand(metaclass=CommandMeta):
     pass
 
 
-@default_name
 class InstrumentCommand(GenericCommand):
 
     @cli_command
