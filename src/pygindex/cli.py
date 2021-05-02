@@ -17,6 +17,16 @@ cli_command = PluggableDecorator.build_decorator_class(
 
 
 class CommandMeta(type):
+    """Metaclass to create command classes.
+
+    Currently the only purpose of this metaclass is to inject
+    default class property that defines object cli name.
+
+    Thus all classes that inherit from this metaclass are
+    going to have `cli_name` property set to the lowercase
+    name of the class, unless they override it.
+    """
+
     def __new__(cls, *args, **kwargs):
         args[2].setdefault("cli_name", args[0].lower())
         cls_inst = super().__new__(cls, *args, **kwargs)
