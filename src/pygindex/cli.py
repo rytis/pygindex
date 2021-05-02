@@ -34,6 +34,11 @@ class CommandMeta(type):
 
 
 class GenericCommand(metaclass=CommandMeta):
+    """Class to group and identify all CLI command classes.
+
+    This is a simple approach to have "pluggable" architecture,
+    and at this time this class is not responsible for anything else.
+    """
     pass
 
 
