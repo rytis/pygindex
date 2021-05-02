@@ -38,6 +38,10 @@ class GenericCommand(metaclass=CommandMeta):
 
     This is a simple approach to have "pluggable" architecture,
     and at this time this class is not responsible for anything else.
+
+    The `docstrings` in child classes are important:
+      * Class `docstring` is used as a CLI group description
+      * Method decorated with :func:`cli_command` `docstring` is used as action group description
     """
     pass
 
