@@ -2,7 +2,11 @@
 
 import argparse
 import functools
+import json
 import sys
+
+from .client import IGClient
+from .models import IGUserAuth
 from .utils import Configuration
 from .utils import PluggableDecorator, method_labeler
 
@@ -35,7 +39,10 @@ class InstrumentCommand(GenericCommand):
         return self._get
 
     def _get(self, name):
-        print(f"process instrument get ({name})")
+        client = IGClient(get_auth_config())
+        instrument_data = client.get_instrument(name)
+        print(json.dumps(instrument_data.instrument, indent=4))
+        print(json.dumps(instrument_data.snapshot, indent=4))
 
     @cli_command
     def search(self, parser):
@@ -43,8 +50,10 @@ class InstrumentCommand(GenericCommand):
         parser.add_argument("term", help="Search term")
         return self._search
 
-    def _search(self):
-        print("process instrument search")
+    def _search(self, term):
+        client = IGClient(get_auth_config())
+        results = client.search_markets(term)
+        print(json.dumps(results, indent=4))
 
 
 class PositionsCommand(GenericCommand):
@@ -104,6 +113,14 @@ def dispatch_command(args, dispatch_map):
     dispatch_map[key](**cmd_args)
 
 
+def get_auth_config(platform=None):
+    conf = Configuration.from_file()
+    platform = platform or conf["platform"]["default"]
+    auth_conf = conf["auth"][platform]
+    ig_auth = IGUserAuth(**auth_conf)
+    return ig_auth
+
+
 def app():
     parser, subparser = init_parser()
     dispatch_map = build_dispatch_map(subparser)
@@ -111,5 +128,4 @@ def app():
 
     dispatch_command(args, dispatch_map)
 
-    _ = Configuration.from_file()
     sys.exit(0)
