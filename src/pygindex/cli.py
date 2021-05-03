@@ -91,6 +91,17 @@ class PositionsCommand(GenericCommand):
 
 
 def register_command_parsers(cls, root_subparser):
+    """Discover classes implementing command line objects and actions.
+    Create new :mod:`argparse` parser for each discovered CLI object class.
+    Register the created parser under the ``root_subparser``.
+    Create new subparser to hold all commands, and create new parsers for
+    each command.
+    Register command callables for every action discovered.
+
+    :param cls: Class that is used to discover all CLI object classes
+    :param root_subparser: Base subparser where all command and action parsers will be registered
+    :return: Dictionary of callables
+    """
     dispatch_map = {}
     for command_cls in cls.__subclasses__():
         parser_cmd = root_subparser.add_parser(

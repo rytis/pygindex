@@ -99,7 +99,8 @@ Information about specific function, class or method.
 .. toctree::
    :maxdepth: 2
 
-   api   
+   api
+   cli
 
 
 Indices and tables
