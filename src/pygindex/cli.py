@@ -2,7 +2,6 @@
 
 import argparse
 import functools
-import json
 import sys
 import jinja2
 from .client import IGClient
