@@ -4,7 +4,7 @@ import argparse
 import functools
 import json
 import sys
-
+import jinja2
 from .client import IGClient
 from .models import IGUserAuth
 from .utils import Configuration
@@ -44,7 +44,10 @@ class GenericCommand(metaclass=CommandMeta):
       * Method decorated with :func:`cli_command` `docstring` is used as action group description
     """
 
-    pass
+    def __init__(self):
+        self.jinja_env = jinja2.Environment(
+            loader=jinja2.PackageLoader("pygindex")
+        )
 
 
 class InstrumentCommand(GenericCommand):
@@ -61,8 +64,10 @@ class InstrumentCommand(GenericCommand):
     def _get(self, name):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
-        print(json.dumps(instrument_data.instrument, indent=4))
-        print(json.dumps(instrument_data.snapshot, indent=4))
+        # print(json.dumps(instrument_data.instrument, indent=4))
+        # print(json.dumps(instrument_data.snapshot, indent=4))
+        template = self.jinja_env.get_template("cli_get_instrument.j2")
+        print(template.render(d=instrument_data))
 
     @cli_command
     def search(self, parser):

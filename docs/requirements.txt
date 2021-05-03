@@ -1,3 +1,4 @@
 sphinx_toolbox
 enum_tools
 PyYAML
+Jinja2
