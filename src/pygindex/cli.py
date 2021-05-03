@@ -151,6 +151,15 @@ def parse_args(parser):
 
 
 def dispatch_command(args, dispatch_map):
+    """Given a parsed arguments object and a dispatch map, call
+    relevant callable for ``object`` and ``command`` pair.
+
+    Pass on all other available arguments to the callable as a dictionary, but
+    remove ``object`` and ``command`` entries.
+
+    :param args: Object containing parsed arguments
+    :param dispatch_map: Dictionary with callables for (``object``, ``command``) pairs
+    """
     key = (args.object, args.command)
     cmd_args = {
         k: v for k, v in args.__dict__.items() if k not in ["object", "command"]
@@ -159,6 +168,12 @@ def dispatch_command(args, dispatch_map):
 
 
 def get_auth_config(platform=None):
+    """Read configuration file and build an instance of :class:`IGUserAuth`
+
+    :param platform: Optional platform selector, defaults to ``None`` in which
+                     case a setting from configuration file will be used.
+    :return: IG Authentication object
+    """
     conf = Configuration.from_file()
     platform = platform or conf["platform"]["default"]
     auth_conf = conf["auth"][platform]
