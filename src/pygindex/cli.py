@@ -45,9 +45,7 @@ class GenericCommand(metaclass=CommandMeta):
     """
 
     def __init__(self):
-        self.jinja_env = jinja2.Environment(
-            loader=jinja2.PackageLoader("pygindex")
-        )
+        self.jinja_env = jinja2.Environment(loader=jinja2.PackageLoader("pygindex"))
 
 
 class InstrumentCommand(GenericCommand):
