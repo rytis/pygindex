@@ -76,7 +76,10 @@ class InstrumentCommand(GenericCommand):
     def _search(self, term):
         client = IGClient(get_auth_config())
         results = client.search_markets(term)
-        print(json.dumps(results, indent=4))
+        # print(json.dumps(results, indent=4))
+        template = self.jinja_env.get_template("cli_search_instrument.j2")
+        print(template.render(d=results))
+
 
 
 class PositionsCommand(GenericCommand):
