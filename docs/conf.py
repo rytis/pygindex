@@ -22,7 +22,7 @@ copyright = '2021, Rytis Sileika'
 author = 'Rytis Sileika'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.3'
+release = '0.1.1'
 
 
 # -- General configuration ---------------------------------------------------
