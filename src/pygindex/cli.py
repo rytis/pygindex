@@ -43,6 +43,7 @@ class GenericCommand(metaclass=CommandMeta):
       * Class `docstring` is used as a CLI group description
       * Method decorated with :func:`cli_command` `docstring` is used as action group description
     """
+
     pass
 
 
