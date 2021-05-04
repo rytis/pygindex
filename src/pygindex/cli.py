@@ -1,6 +1,7 @@
 """Command line interface"""
 
 import argparse
+import json
 import functools
 import sys
 import jinja2
@@ -58,13 +59,18 @@ class InstrumentCommand(GenericCommand):
         parser.add_argument("name", help="Instrument name")
         return self._get
 
-    def _get(self, name):
+    def _get(self, name, **kwargs):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
-        # print(json.dumps(instrument_data.instrument, indent=4))
-        # print(json.dumps(instrument_data.snapshot, indent=4))
-        template = self.jinja_env.get_template("cli_get_instrument.j2")
-        print(template.render(d=instrument_data))
+        if kwargs["format"] == "json":
+            output = "{}\n{}".format(
+                json.dumps(instrument_data.instrument, indent=4),
+                json.dumps(instrument_data.snapshot, indent=4),
+            )
+        else:
+            template = self.jinja_env.get_template("cli_get_instrument.j2")
+            output = template.render(d=instrument_data)
+        print(output)
 
     @cli_command
     def search(self, parser):
@@ -72,13 +78,15 @@ class InstrumentCommand(GenericCommand):
         parser.add_argument("term", help="Search term")
         return self._search
 
-    def _search(self, term):
+    def _search(self, term, **kwargs):
         client = IGClient(get_auth_config())
         results = client.search_markets(term)
-        # print(json.dumps(results, indent=4))
-        template = self.jinja_env.get_template("cli_search_instrument.j2")
-        print(template.render(d=results))
-
+        if kwargs["format"] == "json":
+            output = json.dumps(results, indent=4)
+        else:
+            template = self.jinja_env.get_template("cli_search_instrument.j2")
+            output = template.render(d=results)
+        print(output)
 
 
 class PositionsCommand(GenericCommand):
@@ -131,6 +139,9 @@ def init_parser():
     parser = argparse.ArgumentParser(
         prog="pygi",
         description="Command line utility to interact with IG Index trading platform",
+    )
+    parser.add_argument(
+        "--format", choices=["json", "text"], default="text", help="Output format type"
     )
     subparser = parser.add_subparsers(dest="object", required=True)
     return parser, subparser
