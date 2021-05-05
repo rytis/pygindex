@@ -5,6 +5,7 @@ import json
 import functools
 import sys
 import jinja2
+from dataclasses import asdict
 from .client import IGClient
 from .models import IGUserAuth
 from .utils import Configuration
@@ -47,6 +48,14 @@ class GenericCommand(metaclass=CommandMeta):
     def __init__(self):
         self.jinja_env = jinja2.Environment(loader=jinja2.PackageLoader("pygindex"))
 
+    def _display_data(self, output_format, template, data):
+        if output_format == "json":
+            output = json.dumps(data, indent=4, sort_keys=True)
+        elif output_format == "text":
+            template = self.jinja_env.get_template(template)
+            output = template.render(d=data)
+        print(output)
+
 
 class InstrumentCommand(GenericCommand):
     """Instruments"""
@@ -62,15 +71,7 @@ class InstrumentCommand(GenericCommand):
     def _get(self, name, **kwargs):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
-        if kwargs["format"] == "json":
-            output = "{}\n{}".format(
-                json.dumps(instrument_data.instrument, indent=4),
-                json.dumps(instrument_data.snapshot, indent=4),
-            )
-        else:
-            template = self.jinja_env.get_template("cli_get_instrument.j2")
-            output = template.render(d=instrument_data)
-        print(output)
+        self._display_data(kwargs["format"], "cli_get_instrument.j2", asdict(instrument_data))
 
     @cli_command
     def search(self, parser):
@@ -81,12 +82,7 @@ class InstrumentCommand(GenericCommand):
     def _search(self, term, **kwargs):
         client = IGClient(get_auth_config())
         results = client.search_markets(term)
-        if kwargs["format"] == "json":
-            output = json.dumps(results, indent=4)
-        else:
-            template = self.jinja_env.get_template("cli_search_instrument.j2")
-            output = template.render(d=results)
-        print(output)
+        self._display_data(kwargs["format"], "cli_search_instrument.j2", results)
 
 
 class PositionsCommand(GenericCommand):
