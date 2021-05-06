@@ -47,7 +47,15 @@ class Configuration(dict):
         super().__init__()
 
     @classmethod
-    def from_file(cls, path="~/.pygindex.yaml"):
+    def from_file(cls, path: str = "~/.pygindex.yaml"):
+        """Read configuration file and return initialised object.
+
+        If the file cannot be read, return an empty dictionary.
+
+        :param path: Path to a YAML configuration file. Default: ``~/.pygindex.yaml``
+        :type path: str
+        :return: Instance of :class:`utils.Configuration` initialised from the file
+        """
         path = os.path.expanduser(path)
         try:
             with open(path, "r") as file:

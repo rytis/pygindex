@@ -71,7 +71,9 @@ class InstrumentCommand(GenericCommand):
     def _get(self, name, **kwargs):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
-        self._display_data(kwargs["format"], "cli_get_instrument.j2", asdict(instrument_data))
+        self._display_data(
+            kwargs["format"], "cli_get_instrument.j2", asdict(instrument_data)
+        )
 
     @cli_command
     def search(self, parser):
