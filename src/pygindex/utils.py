@@ -8,6 +8,14 @@ import yaml
 
 
 def method_labeler(obj, owner, name, label):
+    """A helper function that can be used with :class:`PluggableDecorator`
+    to create a list (as class property) of all decorated function names.
+
+    :param obj: Object that contains decorated method (``self`` in method call)
+    :param owner: Class that contains the decorated function
+    :param name: Name of the function
+    :param label: Name of the class property where the method name should be appended to
+    """
     if hasattr(owner, label):
         getattr(owner, label).append(name)
     else:
