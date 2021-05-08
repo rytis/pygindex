@@ -1,0 +1,9 @@
+  Name         Available         P/L     Balance     Deposit
+{% for a in d.accounts -%}
+{% if a.preferred %}* {% else %}  {% endif -%}
+{{ "{:10}".format(a.accountName) -}}
+{{ "{:12.0f}".format(a.balance.available) -}}
+{{ "{:12.0f}".format(a.balance.profitLoss) -}}
+{{ "{:12.0f}".format(a.balance.balance) -}}
+{{ "{:12.0f}".format(a.balance.deposit) }}
+{% endfor %}

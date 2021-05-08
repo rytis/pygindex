@@ -98,8 +98,26 @@ class PositionsCommand(GenericCommand):
         parser.add_argument("--all", help="Get all")
         return self._get
 
-    def _get(self):
-        print("process positions get")
+    def _get(self, **kwargs):
+        client = IGClient(get_auth_config())
+        positions = client.get_positions()
+        self._display_data(kwargs["format"], "cli_positions.j2", positions)
+
+
+class AccountCommand(GenericCommand):
+    """Query account details"""
+
+    cli_name = "account"
+
+    @cli_command
+    def get(self, parser):
+        """Get account information"""
+        return self._get
+
+    def _get(self, **kwargs):
+        client = IGClient(get_auth_config())
+        accounts = client.get_accounts()
+        self._display_data(kwargs["format"], "cli_get_account.j2", accounts)
 
 
 def register_command_parsers(cls, root_subparser):
