@@ -108,8 +108,7 @@ class PluggableDecorator:
 
     @classmethod
     def build_decorator_class(cls, set_name_callback, pre_exec_callback=None):
-        """Decorator class factory that generates new class, which can be used as a decorator.
-        """
+        """Decorator class factory that generates new class, which can be used as a decorator."""
         cls._pre_callback = pre_exec_callback or None
         cls._set_name_callback = set_name_callback
         cls_name = f"{cls.__name__}-{uuid.uuid4().hex[:5]}"

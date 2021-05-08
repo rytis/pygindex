@@ -46,7 +46,11 @@ class GenericCommand(metaclass=CommandMeta):
     """
 
     def __init__(self):
-        self.jinja_env = jinja2.Environment(loader=jinja2.PackageLoader("pygindex"))
+        self.jinja_env = jinja2.Environment(
+            loader=jinja2.PackageLoader("pygindex"),
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
 
     def _display_data(self, output_format, template, data):
         if output_format == "json":
