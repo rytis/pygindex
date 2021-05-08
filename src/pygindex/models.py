@@ -14,6 +14,15 @@ class DocEnum(Enum):
 
 
 @unique
+class IGPositionDirection(DocEnum):
+    """Set of values representing the direction of the deal when
+    position was opened."""
+
+    BUY = "BUY", "Buy order"
+    SELL = "SELL", "Sell order"
+
+
+@unique
 class IGPriceResolution(DocEnum):
     """Set of values defining available resolution settings
     when requesting historical price data.
@@ -264,3 +273,46 @@ class IGInstrumentPrices:
     instrument_type: str
     metadata: dict
     prices: list
+
+
+@dataclass
+class IGPosition:
+    """Dataclass to hold information about position"""
+
+    raw_data: dict
+    instrument_name: str = field(init=False)
+    instrument_text: str = field(init=False)
+    sell: float = field(init=False)
+    buy: float = field(init=False)
+    high: float = field(init=False)
+    low: float = field(init=False)
+    change_net: float = field(init=False)
+    change_pct: float = field(init=False)
+    deal_size: float = field(init=False)
+    open_level: float = field(init=False)
+    direction: IGPositionDirection = field(init=False)
+    position_open_ts: str = field(init=False)
+
+    def __post_init__(self):
+        self.instrument_name = self.raw_data["market"]["epic"]
+        self.instrument_text = self.raw_data["market"]["instrumentName"]
+        self.sell = self.raw_data["market"]["bid"]
+        self.buy = self.raw_data["market"]["offer"]
+        self.high = self.raw_data["market"]["high"]
+        self.low = self.raw_data["market"]["low"]
+        self.change_net = self.raw_data["market"]["netChange"]
+        self.change_pct = self.raw_data["market"]["percentageChange"]
+        self.deal_size = self.raw_data["position"]["dealSize"]
+        self.open_level = self.raw_data["position"]["openLevel"]
+        self.direction = getattr(
+            IGPositionDirection, self.raw_data["position"]["direction"]
+        )
+        self.position_open_ts = self.raw_data["position"]["createdDate"]
+
+    @property
+    def profit_loss(self):
+        if self.direction == IGPositionDirection.BUY:
+            pnl = (self.sell - self.open_level) * self.deal_size
+        else:
+            pnl = (self.buy - self.open_level) * self.deal_size
+        return pnl
