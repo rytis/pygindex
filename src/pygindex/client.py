@@ -12,6 +12,7 @@ from pygindex.models import (
     IGResponse,
     IGInstrument,
     IGInstrumentPrices,
+    IGPosition,
 )
 
 
@@ -178,6 +179,68 @@ class IGClient:
         req = self._authenticated_request(url=self._api.accounts_url, method="get")
         return req.data
 
+    def _fetch_positions_data(self) -> dict:
+        """This method retrieves all positions for authenticated account from the API
+
+        Example::
+
+            c = IGClient()
+            p = c._fetch_positions_data()
+
+        Positions details::
+
+            {
+                "positions": [
+                    {
+                        "position": {
+                            "contractSize": 1.0,
+                            "createdDate": "2021/02/10 11:42:56:000",
+                            "dealId": "DIAAAAGB25EY6AN",
+                            "dealSize": 0.1,
+                            "direction": "BUY",
+                            "limitLevel": null,
+                            "openLevel": 13664.0,
+                            "currency": "GBP",
+                            "controlledRisk": false,
+                            "stopLevel": null,
+                            "trailingStep": null,
+                            "trailingStopDistance": null,
+                            "limitedRiskPremium": null
+                        },
+                        "market": {
+                            "instrumentName": "Apple Inc (All Sessions)",
+                            "expiry": "DFB",
+                            "epic": "UA.D.AAPL.DAILY.IP",
+                            "instrumentType": "SHARES",
+                            "lotSize": 1.0,
+                            "high": 13498.0,
+                            "low": 13324.0,
+                            "percentageChange": -0.34,
+                            "netChange": -46.0,
+                            "bid": 13398.0,
+                            "offer": 13411.0,
+                            "updateTime": "21:59:15",
+                            "delayTime": 0,
+                            "streamingPricesAvailable": false,
+                            "marketStatus": "EDITS_ONLY",
+                            "scalingFactor": 1
+                        }
+                    },
+
+                    [...]
+
+                ]
+            }
+
+        :return: Dictionary with all positions with details as documented
+                  in `Positions API`_
+        :rtype: dict
+
+        .. _Positions API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=611
+        """
+        req = self._authenticated_request(url=self._api.positions_url, method="get")
+        return req.data
+
     def get_positions(self) -> dict:
         """This method retrieves all positions for authenticated account from the API
 
@@ -237,8 +300,13 @@ class IGClient:
 
         .. _Positions API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=611
         """
-        req = self._authenticated_request(url=self._api.positions_url, method="get")
-        return req.data
+        # req = self._authenticated_request(url=self._api.positions_url, method="get")
+        # return req.data
+        res = []
+        pos_data = self._fetch_positions_data()
+        for pos in pos_data["positions"]:
+            res.append(IGPosition(pos))
+        return res
 
     def search_markets(self, term) -> dict:
         """Search for markets on IG Index platform that match specified criteria
