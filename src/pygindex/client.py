@@ -241,8 +241,9 @@ class IGClient:
         req = self._authenticated_request(url=self._api.positions_url, method="get")
         return req.data
 
-    def get_positions(self) -> dict:
+    def get_positions(self) -> list:
         """This method retrieves all positions for authenticated account from the API
+        and returns a list of :class:`IGPosition` instances.
 
         Example::
 
@@ -251,61 +252,23 @@ class IGClient:
 
         Positions details::
 
-            {
-                "positions": [
-                    {
-                        "position": {
-                            "contractSize": 1.0,
-                            "createdDate": "2021/02/10 11:42:56:000",
-                            "dealId": "DIAAAAGB25EY6AN",
-                            "dealSize": 0.1,
-                            "direction": "BUY",
-                            "limitLevel": null,
-                            "openLevel": 13664.0,
-                            "currency": "GBP",
-                            "controlledRisk": false,
-                            "stopLevel": null,
-                            "trailingStep": null,
-                            "trailingStopDistance": null,
-                            "limitedRiskPremium": null
-                        },
-                        "market": {
-                            "instrumentName": "Apple Inc (All Sessions)",
-                            "expiry": "DFB",
-                            "epic": "UA.D.AAPL.DAILY.IP",
-                            "instrumentType": "SHARES",
-                            "lotSize": 1.0,
-                            "high": 13498.0,
-                            "low": 13324.0,
-                            "percentageChange": -0.34,
-                            "netChange": -46.0,
-                            "bid": 13398.0,
-                            "offer": 13411.0,
-                            "updateTime": "21:59:15",
-                            "delayTime": 0,
-                            "streamingPricesAvailable": false,
-                            "marketStatus": "EDITS_ONLY",
-                            "scalingFactor": 1
-                        }
-                    },
+            [
+                IGPosition(raw_data={'position': {...}, 'market': {...}},
+                           instrument_name='UA.D.AAPL.DAILY.IP',
+                           instrument_text='Apple Inc (All Sessions)',
+                           sell=12257.0, buy=12267.0, high=12590.0, low=12221.0, change_net=-329.5, change_pct=-2.62,
+                           deal_size=0.1, open_level=13664.0,
+                           direction=<IGPositionDirection.BUY: 'BUY'>, position_open_ts='yyyy/mm/dd hh:mm:ss:000'),
+                IGPosition(...),
+                ...
+            ]
 
-                    [...]
+        :return: List of :class:`IGPosition` instances
+        :rtype: list
 
-                ]
-            }
-
-        :return: Dictionary with all positions with details as documented
-                  in `Positions API`_
-        :rtype: dict
-
-        .. _Positions API: https://labs.ig.com/rest-trading-api-reference/service-detail?id=611
         """
-        # req = self._authenticated_request(url=self._api.positions_url, method="get")
-        # return req.data
-        res = []
         pos_data = self._fetch_positions_data()
-        for pos in pos_data["positions"]:
-            res.append(IGPosition(pos))
+        res = [IGPosition(pos) for pos in pos_data["positions"]]
         return res
 
     def search_markets(self, term) -> dict:
