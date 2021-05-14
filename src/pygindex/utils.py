@@ -5,6 +5,20 @@ import functools
 import os
 import uuid
 import yaml
+import json
+import enum
+import dataclasses
+from typing import Any
+
+
+class PyGiJSONEncoder(json.JSONEncoder):
+    def default(self, o: Any) -> Any:
+        if isinstance(o, enum.Enum):
+            return o.name
+        elif dataclasses._is_dataclass_instance(o):
+            return dataclasses.asdict(o)
+        else:
+            return json.JSONEncoder.default(self, o)
 
 
 def method_labeler(obj, owner, name, label):

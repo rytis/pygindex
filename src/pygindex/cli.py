@@ -8,7 +8,7 @@ import jinja2
 from dataclasses import asdict
 from .client import IGClient
 from .models import IGUserAuth
-from .utils import Configuration
+from .utils import Configuration, PyGiJSONEncoder
 from .utils import PluggableDecorator, method_labeler
 
 
@@ -54,7 +54,7 @@ class GenericCommand(metaclass=CommandMeta):
 
     def _display_data(self, output_format, template, data):
         if output_format == "json":
-            output = json.dumps(data, indent=4, sort_keys=True)
+            output = json.dumps(data, indent=4, sort_keys=True, cls=PyGiJSONEncoder)
         elif output_format == "text":
             template = self.jinja_env.get_template(template)
             output = template.render(d=data)
@@ -105,7 +105,7 @@ class PositionsCommand(GenericCommand):
     def _get(self, **kwargs):
         client = IGClient(get_auth_config())
         positions = client.get_positions()
-        self._display_data(kwargs["format"], "cli_positions.j2", positions)
+        self._display_data(kwargs["format"], "cli_get_positions.j2", positions)
 
 
 class AccountCommand(GenericCommand):
