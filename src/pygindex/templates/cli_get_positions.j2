@@ -1,0 +1,16 @@
+{% set ns = namespace(pnl=0) %}
+IG Instrument       Market                        Size        Open      Latest         P/L
+{% for p in d %}
+{{ "{:20}".format(p.instrument_name) -}}
+{{ "{:30}".format(p.instrument_text[:30]) -}}
+{{ "{:4.1f}".format(p.deal_size) -}}
+{{ "{:12.2f}".format(p.open_level) -}}
+{% if p.direction.name == "BUY" %}
+{{ "{:12.2f}".format(p.sell) -}}
+{% else %}
+{{ "{:12.2f}".format(p.buy) -}}
+{% endif %}
+{{ "{:12.2f}".format(p.profit_loss) }}
+{% set ns.pnl = ns.pnl + p.profit_loss %}
+{% endfor %}
+                                                                              {{ "{:12.2f}".format(ns.pnl) }}
