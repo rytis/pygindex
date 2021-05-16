@@ -5,7 +5,6 @@ import json
 import functools
 import sys
 import jinja2
-from dataclasses import asdict
 from .client import IGClient
 from .models import IGUserAuth
 from .utils import Configuration, PyGiJSONEncoder
@@ -70,7 +69,9 @@ class InstrumentCommand(GenericCommand):
     def get(self, parser):
         """Get instrument details"""
         parser.add_argument("name", help="Instrument name")
-        parser.add_argument("-p", "--prices", action="store_true" ,help="Retrieve price data")
+        parser.add_argument(
+            "-p", "--prices", action="store_true", help="Retrieve price data"
+        )
         return self._get
 
     def _get(self, name, **kwargs):
