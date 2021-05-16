@@ -70,14 +70,18 @@ class InstrumentCommand(GenericCommand):
     def get(self, parser):
         """Get instrument details"""
         parser.add_argument("name", help="Instrument name")
+        parser.add_argument("-p", "--prices", action="store_true" ,help="Retrieve price data")
         return self._get
 
     def _get(self, name, **kwargs):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
-        self._display_data(
-            kwargs["format"], "cli_get_instrument.j2", asdict(instrument_data)
-        )
+        if kwargs["prices"]:
+            instrument_prices = client.get_prices(instrument_data)
+        else:
+            instrument_prices = None
+        data = dict(data=instrument_data, prices=instrument_prices)
+        self._display_data(kwargs["format"], "cli_get_instrument.j2", data)
 
     @cli_command
     def search(self, parser):
