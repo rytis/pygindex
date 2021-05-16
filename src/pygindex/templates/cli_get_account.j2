@@ -1,5 +1,8 @@
+Client ID : {{ d.session.clientId }}
+Account ID: {{ d.session.accountId }}
+
   Name         Available         P/L     Balance     Deposit
-{% for a in d.accounts -%}
+{% for a in d.accounts.accounts -%}
 {% if a.preferred %}* {% else %}  {% endif -%}
 {{ "{:10}".format(a.accountName) -}}
 {{ "{:12.0f}".format(a.balance.available) -}}

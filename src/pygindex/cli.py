@@ -121,7 +121,9 @@ class AccountCommand(GenericCommand):
     def _get(self, **kwargs):
         client = IGClient(get_auth_config())
         accounts = client.get_accounts()
-        self._display_data(kwargs["format"], "cli_get_account.j2", accounts)
+        session = client.get_session_details()
+        data = dict(accounts=accounts, session=session)
+        self._display_data(kwargs["format"], "cli_get_account.j2", data)
 
 
 def register_command_parsers(cls, root_subparser):
