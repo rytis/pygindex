@@ -15,8 +15,9 @@ Low:           {{ d.data.snapshot.low }}
 {% endmacro %}
 
 {% if d.prices %}
-        Open                 Close                  High                  Low              Volume
+     Timestamp             Open (S/B)              Close                  High                  Low              Volume
+--------------------+---------------------+---------------------+---------------------+---------------------+----------
 {% for p in d.prices.prices %}
-{{ fmt_fl(p.openPrice.bid) }}/{{ fmt_fl(p.openPrice.ask) }}   {{ fmt_fl(p.closePrice.bid) }}/{{ fmt_fl(p.closePrice.ask) }}   {{ fmt_fl(p.highPrice.bid) }}/{{ fmt_fl(p.highPrice.ask) }}   {{ fmt_fl(p.lowPrice.bid) }}/{{ fmt_fl(p.lowPrice.ask) }}   {{ fmt_fl(p.lastTradedVolume) }}
+{{ p.snapshotTime }}   {{ fmt_fl(p.openPrice.bid) }}/{{ fmt_fl(p.openPrice.ask) }}   {{ fmt_fl(p.closePrice.bid) }}/{{ fmt_fl(p.closePrice.ask) }}   {{ fmt_fl(p.highPrice.bid) }}/{{ fmt_fl(p.highPrice.ask) }}   {{ fmt_fl(p.lowPrice.bid) }}/{{ fmt_fl(p.lowPrice.ask) }}   {{ fmt_fl(p.lastTradedVolume) }}
 {% endfor %}
 {% endif %}
