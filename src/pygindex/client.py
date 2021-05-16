@@ -180,7 +180,7 @@ class IGClient:
         return req.data
 
     def _fetch_positions_data(self) -> dict:
-        """This method retrieves all positions for authenticated account from the API
+        """Helper method to fetch all positions for authenticated account from the API
 
         Example::
 
@@ -242,8 +242,7 @@ class IGClient:
         return req.data
 
     def get_positions(self) -> list:
-        """This method retrieves all positions for authenticated account from the API
-        and returns a list of :class:`IGPosition` instances.
+        """This method retrieves all positions for authenticated account from the API.
 
         Example::
 
@@ -258,7 +257,8 @@ class IGClient:
                            instrument_text='Apple Inc (All Sessions)',
                            sell=12257.0, buy=12267.0, high=12590.0, low=12221.0, change_net=-329.5, change_pct=-2.62,
                            deal_size=0.1, open_level=13664.0,
-                           direction=<IGPositionDirection.BUY: 'BUY'>, position_open_ts='yyyy/mm/dd hh:mm:ss:000'),
+                           direction=<IGPositionDirection.BUY: 'BUY'>, position_open_ts='yyyy/mm/dd hh:mm:ss:000',
+                           deal_id='XXXXXXXXXXXXXXXX'),
                 IGPosition(...),
                 ...
             ]

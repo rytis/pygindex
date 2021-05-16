@@ -1,6 +1,7 @@
 {% set ns = namespace(pnl=0) %}
-IG Instrument       Market                        Size        Open      Latest         P/L
+Deal ID          IG Instrument       Market                        Size        Open      Latest         P/L
 {% for p in d %}
+{{ "{:17}".format(p.deal_id) -}}
 {{ "{:20}".format(p.instrument_name) -}}
 {{ "{:30}".format(p.instrument_text[:30]) -}}
 {{ "{:4.1f}".format(p.deal_size) -}}
@@ -13,4 +14,4 @@ IG Instrument       Market                        Size        Open      Latest  
 {{ "{:12.2f}".format(p.profit_loss) }}
 {% set ns.pnl = ns.pnl + p.profit_loss %}
 {% endfor %}
-                                                                              {{ "{:12.2f}".format(ns.pnl) }}
+                                                                                      Total:   {{ "{:12.2f}".format(ns.pnl) }}

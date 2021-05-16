@@ -292,6 +292,7 @@ class IGPosition:
     open_level: float = field(init=False)
     direction: IGPositionDirection = field(init=False)
     position_open_ts: str = field(init=False)
+    deal_id: str = field(init=False)
 
     def __post_init__(self):
         self.instrument_name = self.raw_data["market"]["epic"]
@@ -308,6 +309,7 @@ class IGPosition:
             IGPositionDirection, self.raw_data["position"]["direction"]
         )
         self.position_open_ts = self.raw_data["position"]["createdDate"]
+        self.deal_id = self.raw_data["position"]["dealId"]
 
     @property
     def profit_loss(self):
