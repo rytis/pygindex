@@ -14,7 +14,8 @@ User guide
 .. toctree::
    :maxdepth: 2
 
-   installation	      
+   installation
+   cli_user
 
 Examples
 --------
