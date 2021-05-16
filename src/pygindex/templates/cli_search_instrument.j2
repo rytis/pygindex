@@ -1,4 +1,4 @@
 Instrument                     Name                                     Type            Expiry
 {% for m in d.markets %}
 {{ "{:30}".format(m.epic) }} {{ "{:40}".format(m.instrumentName) }} {{ "{:15}".format(m.instrumentType) }} {{ "{:15}".format(m.expiry) }}
-{%- endfor %}
+{% endfor %}
