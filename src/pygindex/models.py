@@ -80,8 +80,7 @@ class IGUserAuth:
                 env_var_name = "IG_{}".format(fld.name.upper())
                 if env_var_name not in os.environ:
                     raise ValueError(
-                        f"Required argument '{fld.name}' or environment "
-                        f"variable '{env_var_name}' not set"
+                        f"Required argument '{fld.name}' or environment " f"variable '{env_var_name}' not set"
                     )
                 setattr(self, fld.name, os.environ[env_var_name])
 
@@ -147,10 +146,7 @@ class IGAPIConfig:
         if self.platform is None:
             self.platform = os.environ.get("IG_PLATFORM", default="live")
         if self.platform not in platform_urls.keys():
-            raise ValueError(
-                f"Unknown platform type: {self.platform} "
-                f"(valid options: 'live', 'demo')"
-            )
+            raise ValueError(f"Unknown platform type: {self.platform} " f"(valid options: 'live', 'demo')")
         self.base_url = platform_urls[self.platform]
 
     @property
@@ -305,9 +301,7 @@ class IGPosition:
         self.change_pct = self.raw_data["market"]["percentageChange"]
         self.deal_size = self.raw_data["position"]["dealSize"]
         self.open_level = self.raw_data["position"]["openLevel"]
-        self.direction = getattr(
-            IGPositionDirection, self.raw_data["position"]["direction"]
-        )
+        self.direction = getattr(IGPositionDirection, self.raw_data["position"]["direction"])
         self.position_open_ts = self.raw_data["position"]["createdDate"]
         self.deal_id = self.raw_data["position"]["dealId"]
 

@@ -60,9 +60,7 @@ class IGClient:
             return False
         return True
 
-    def _authenticated_request(
-        self, url: str, method: str, headers: Dict = None, data: Dict = None
-    ) -> IGResponse:
+    def _authenticated_request(self, url: str, method: str, headers: Dict = None, data: Dict = None) -> IGResponse:
         """Authenticate with API if we don't have valid token"""
         if not self._authentication_is_valid:
             self._authenticate()
@@ -88,9 +86,7 @@ class IGClient:
         data = self._auth.auth_req_data
         req = self._request(self._api.session_url, "post", headers=headers, data=data)
         if "Access-Control-Max-Age" in req.headers:
-            self._session.expires = int(
-                time.time() + int(req.headers["Access-Control-Max-Age"])
-            )
+            self._session.expires = int(time.time() + int(req.headers["Access-Control-Max-Age"]))
         self._session.cst = req.headers["CST"]
         self._session.security_token = req.headers["X-SECURITY-TOKEN"]
 
@@ -310,9 +306,7 @@ class IGClient:
         :return: List of markets that matched search criteria
         """
         payload = {"searchTerm": term}
-        req = self._authenticated_request(
-            url=self._api.markets_url, method="get", data=payload
-        )
+        req = self._authenticated_request(url=self._api.markets_url, method="get", data=payload)
         return req.data
 
     def get_instrument(self, instrument: Union[str, IGInstrument]) -> IGInstrument:
@@ -599,9 +593,7 @@ class IGClient:
             payload["to"] = end_time.isoformat(timespec="seconds")
         elif max_data_points:
             payload["max"] = max_data_points
-        req = self._authenticated_request(
-            url=url, method="get", data=payload, headers={"version": "3"}
-        )
+        req = self._authenticated_request(url=url, method="get", data=payload, headers={"version": "3"})
         data = {
             "instrument": instrument,
             "instrument_type": req.data["instrumentType"],

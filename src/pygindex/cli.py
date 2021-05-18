@@ -10,7 +10,6 @@ from .models import IGUserAuth
 from .utils import Configuration, PyGiJSONEncoder
 from .utils import PluggableDecorator, method_labeler
 
-
 cli_command = PluggableDecorator.build_decorator_class(
     set_name_callback=functools.partialmethod(method_labeler, label="_cli_command")
 )
@@ -69,9 +68,13 @@ class InstrumentCommand(GenericCommand):
     def get(self, parser):
         """Get instrument details"""
         parser.add_argument("name", help="Instrument name")
-        parser.add_argument(
-            "-p", "--prices", action="store_true", help="Retrieve price data"
+        parser.add_argument("-p", "--prices", action="store_true", help="Retrieve price data.")
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument("-r", "--range", nargs=2, help="Date time range to retrieve price data.")
+        group.add_argument(
+            "-m", "--max-num", help="Max number of data points to retrieve. Ignored, if range is specified."
         )
+        parser.add_argument("-n", "--resolution", help="Resolution of the requested prices.")
         return self._get
 
     def _get(self, name, **kwargs):
@@ -145,15 +148,11 @@ def register_command_parsers(cls, root_subparser):
     """
     dispatch_map = {}
     for command_cls in cls.__subclasses__():
-        parser_cmd = root_subparser.add_parser(
-            command_cls.cli_name, help=command_cls.__doc__
-        )
+        parser_cmd = root_subparser.add_parser(command_cls.cli_name, help=command_cls.__doc__)
         subparsers_cmd = parser_cmd.add_subparsers(dest="command", required=True)
         for action in command_cls._cli_command:
             obj, action = command_cls.cli_name, action
-            parser_action = subparsers_cmd.add_parser(
-                action, help=getattr(command_cls, action).__doc__
-            )
+            parser_action = subparsers_cmd.add_parser(action, help=getattr(command_cls, action).__doc__)
             dispatch_map[(obj, action)] = getattr(command_cls(), action)(parser_action)
     return dispatch_map
 
@@ -167,9 +166,7 @@ def init_parser():
         prog="pygi",
         description="Command line utility to interact with IG Index trading platform",
     )
-    parser.add_argument(
-        "--format", choices=["json", "text"], default="text", help="Output format type"
-    )
+    parser.add_argument("--format", choices=["json", "text"], default="text", help="Output format type")
     subparser = parser.add_subparsers(dest="object", required=True)
     return parser, subparser
 
@@ -204,9 +201,7 @@ def dispatch_command(args, dispatch_map):
     :param dispatch_map: Dictionary with callables for (``object``, ``command``) pairs
     """
     key = (args.object, args.command)
-    cmd_args = {
-        k: v for k, v in args.__dict__.items() if k not in ["object", "command"]
-    }
+    cmd_args = {k: v for k, v in args.__dict__.items() if k not in ["object", "command"]}
     dispatch_map[key](**cmd_args)
 
 
