@@ -6,7 +6,7 @@ import functools
 import sys
 import jinja2
 from .client import IGClient
-from .models import IGUserAuth
+from .models import IGUserAuth, IGPriceResolution
 from .utils import Configuration, PyGiJSONEncoder
 from .utils import PluggableDecorator, method_labeler
 
@@ -70,14 +70,18 @@ class InstrumentCommand(GenericCommand):
         parser.add_argument("name", help="Instrument name")
         parser.add_argument("-p", "--prices", action="store_true", help="Retrieve price data.")
         group = parser.add_mutually_exclusive_group()
-        group.add_argument("-r", "--range", nargs=2, help="Date time range to retrieve price data.")
+        group.add_argument("-r", "--range", nargs=2, metavar=("FROM", "TO"),
+                           help="Date time range to retrieve price data.")
         group.add_argument(
             "-m", "--max-num", help="Max number of data points to retrieve. Ignored, if range is specified."
         )
-        parser.add_argument("-n", "--resolution", help="Resolution of the requested prices.")
+        parser.add_argument("-n", "--resolution", default="MINUTE",
+                            choices=[r.value for r in IGPriceResolution],
+                            help="Resolution of the requested prices.")
         return self._get
 
     def _get(self, name, **kwargs):
+        print(kwargs)
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:

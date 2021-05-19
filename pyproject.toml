@@ -9,7 +9,8 @@ authors = [
 ]
 dependencies = [
     "requests",
-    "PyYAML"
+    "PyYAML",
+    "arrow"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
