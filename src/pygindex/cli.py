@@ -1,6 +1,7 @@
 """Command line interface"""
 
 import argparse
+import arrow
 import json
 import functools
 import sys
@@ -80,11 +81,30 @@ class InstrumentCommand(GenericCommand):
                             help="Resolution of the requested prices.")
         return self._get
 
+    def _parse_date(self, date_expr: str):
+        now = arrow.utcnow().to("local")
+        if date_expr.lower() == "now":
+            return now.datetime
+        try:
+            ts = arrow.get(date_expr)
+        except arrow.parser.ParserError:
+            print(now)
+            try:
+                ts = now.dehumanize(date_expr)
+            except ValueError:
+                print("Do not know how to parse datetime: {}".format(date_expr))
+                sys.exit(1)
+        return ts.datetime
+
     def _get(self, name, **kwargs):
         print(kwargs)
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:
+            if kwargs["range"]:
+                ts_from, ts_to = map(self._parse_date, kwargs["range"])
+                print(ts_from)
+                print(ts_to)
             instrument_prices = client.get_prices(instrument_data)
         else:
             instrument_prices = None
