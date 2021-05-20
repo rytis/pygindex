@@ -103,9 +103,11 @@ class InstrumentCommand(GenericCommand):
         if kwargs["prices"]:
             if kwargs["range"]:
                 ts_from, ts_to = map(self._parse_date, kwargs["range"])
-                print(ts_from)
-                print(ts_to)
-            instrument_prices = client.get_prices(instrument_data)
+            else:
+                ts_from, ts_to = None, None
+            instrument_prices = client.get_prices(instrument_data,
+                                                  start_time=ts_from,
+                                                  end_time=ts_to)
         else:
             instrument_prices = None
         data = dict(data=instrument_data, prices=instrument_prices)

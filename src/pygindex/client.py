@@ -589,8 +589,9 @@ class IGClient:
             "pageSize": 0,
         }
         if start_time and end_time:
-            payload["from"] = start_time.isoformat(timespec="seconds")
-            payload["to"] = end_time.isoformat(timespec="seconds")
+            # must strip off UTC offset, as IG API does not understand ISO formatted datetime with TZ offset
+            payload["from"] = start_time.isoformat(timespec="seconds").split("+")[0]
+            payload["to"] = end_time.isoformat(timespec="seconds").split("+")[0]
         elif max_data_points:
             payload["max"] = max_data_points
         req = self._authenticated_request(url=url, method="get", data=payload, headers={"version": "3"})
