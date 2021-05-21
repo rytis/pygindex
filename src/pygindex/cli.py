@@ -101,14 +101,18 @@ class InstrumentCommand(GenericCommand):
         if kwargs["prices"]:
             ts_from, ts_to = None, None
             max_points = None
+            resolution = IGPriceResolution.MINUTE
             if kwargs["range"]:
                 ts_from, ts_to = map(self._parse_date, kwargs["range"])
             elif kwargs["max_num"]:
                 max_points = kwargs["max_num"]
+            if kwargs["resolution"]:
+                resolution = getattr(IGPriceResolution, kwargs["resolution"])
             instrument_prices = client.get_prices(instrument_data,
                                                   start_time=ts_from,
                                                   end_time=ts_to,
-                                                  max_data_points=max_points)
+                                                  max_data_points=max_points,
+                                                  resolution=resolution)
         else:
             instrument_prices = None
         data = dict(data=instrument_data, prices=instrument_prices)
