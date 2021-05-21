@@ -99,13 +99,16 @@ class InstrumentCommand(GenericCommand):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:
+            ts_from, ts_to = None, None
+            max_points = None
             if kwargs["range"]:
                 ts_from, ts_to = map(self._parse_date, kwargs["range"])
-            else:
-                ts_from, ts_to = None, None
+            elif kwargs["max_num"]:
+                max_points = kwargs["max_num"]
             instrument_prices = client.get_prices(instrument_data,
                                                   start_time=ts_from,
-                                                  end_time=ts_to)
+                                                  end_time=ts_to,
+                                                  max_data_points=max_points)
         else:
             instrument_prices = None
         data = dict(data=instrument_data, prices=instrument_prices)
