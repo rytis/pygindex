@@ -6,6 +6,7 @@ import json
 import functools
 import sys
 import jinja2
+from typing import Tuple
 from .client import IGClient
 from .models import IGUserAuth, IGPriceResolution
 from .utils import Configuration, PyGiJSONEncoder
@@ -71,14 +72,19 @@ class InstrumentCommand(GenericCommand):
         parser.add_argument("name", help="Instrument name")
         parser.add_argument("-p", "--prices", action="store_true", help="Retrieve price data.")
         group = parser.add_mutually_exclusive_group()
-        group.add_argument("-r", "--range", nargs=2, metavar=("FROM", "TO"),
-                           help="Date time range to retrieve price data.")
+        group.add_argument(
+            "-r", "--range", nargs=2, metavar=("FROM", "TO"), help="Date time range to retrieve price data."
+        )
         group.add_argument(
             "-m", "--max-num", help="Max number of data points to retrieve. Ignored, if range is specified."
         )
-        parser.add_argument("-n", "--resolution", default="MINUTE",
-                            choices=[r.value for r in IGPriceResolution],
-                            help="Resolution of the requested prices.")
+        parser.add_argument(
+            "-n",
+            "--resolution",
+            default="MINUTE",
+            choices=[r.value for r in IGPriceResolution],
+            help="Resolution of the requested prices.",
+        )
         return self._get
 
     def _parse_date(self, date_expr: str):
@@ -95,7 +101,7 @@ class InstrumentCommand(GenericCommand):
                 sys.exit(1)
         return ts.datetime
 
-    def _get(self, name, **kwargs):
+    def _get(self, name: str, **kwargs):
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:
@@ -108,11 +114,9 @@ class InstrumentCommand(GenericCommand):
                 max_points = kwargs["max_num"]
             if kwargs["resolution"]:
                 resolution = getattr(IGPriceResolution, kwargs["resolution"])
-            instrument_prices = client.get_prices(instrument_data,
-                                                  start_time=ts_from,
-                                                  end_time=ts_to,
-                                                  max_data_points=max_points,
-                                                  resolution=resolution)
+            instrument_prices = client.get_prices(
+                instrument_data, start_time=ts_from, end_time=ts_to, max_data_points=max_points, resolution=resolution
+            )
         else:
             instrument_prices = None
         data = dict(data=instrument_data, prices=instrument_prices)
@@ -165,7 +169,7 @@ class AccountCommand(GenericCommand):
         self._display_data(kwargs["format"], "cli_get_account.j2", data)
 
 
-def register_command_parsers(cls, root_subparser):
+def register_command_parsers(cls: type, root_subparser: argparse.ArgumentParser) -> dict:
     """Discover classes implementing command line objects and actions.
     Create new :mod:`argparse` parser for each discovered CLI object class.
     Register the created parser under the ``root_subparser``.
@@ -188,8 +192,8 @@ def register_command_parsers(cls, root_subparser):
     return dispatch_map
 
 
-def init_parser():
-    """Create and instance of :class:`argparse.ArgumentParser`
+def init_parser() -> Tuple[argparse.ArgumentParser, argparse.Action]:
+    """Create an instance of :class:`argparse.ArgumentParser`
 
     :return: A tuple of created parser and subparser instances
     """
@@ -202,7 +206,7 @@ def init_parser():
     return parser, subparser
 
 
-def build_dispatch_map(parser):
+def build_dispatch_map(parser: argparse.ArgumentParser):
     """Create callable dispatch map.
 
     :param parser: Instance of initialised :mod:`argparse`
@@ -212,7 +216,7 @@ def build_dispatch_map(parser):
     return dispatch_map
 
 
-def parse_args(parser):
+def parse_args(parser: argparse.ArgumentParser):
     """Parse command line arguments using provided parser.
 
     :param parser: Instance of initialised :mod:`argparse`
