@@ -88,7 +88,6 @@ class InstrumentCommand(GenericCommand):
         try:
             ts = arrow.get(date_expr)
         except arrow.parser.ParserError:
-            print(now)
             try:
                 ts = now.dehumanize(date_expr)
             except ValueError:
@@ -97,7 +96,6 @@ class InstrumentCommand(GenericCommand):
         return ts.datetime
 
     def _get(self, name, **kwargs):
-        print(kwargs)
         client = IGClient(get_auth_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:
