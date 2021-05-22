@@ -33,6 +33,7 @@ class IGClient:
     @staticmethod
     def _request(url: str, method: str, headers: Dict, data: Dict) -> IGResponse:
         """Make an HTTP request against specified URL
+
         :param url: URL to perform the request against
         :param method: HTTP method type
         :param headers: HTTP Headers to send with the request
@@ -50,6 +51,7 @@ class IGClient:
     @property
     def _authentication_is_valid(self) -> bool:
         """Check is we're authenticated, and the authentication is current
+
         :return: ``True`` if authentication is current, ``False`` otherwise
         :rtype: bool
         """
@@ -79,9 +81,7 @@ class IGClient:
         return req
 
     def _authenticate(self):
-        """
-        Call IG API session URL to retrieve session authentication tokens
-        """
+        """Call IG API session URL to retrieve session authentication tokens"""
         headers = self._auth.auth_req_headers
         data = self._auth.auth_req_data
         req = self._request(self._api.session_url, "post", headers=headers, data=data)
