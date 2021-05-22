@@ -6,7 +6,7 @@ import json
 import functools
 import sys
 import jinja2
-from typing import Tuple
+from typing import Tuple, Callable
 from .client import IGClient
 from .models import IGUserAuth, IGPriceResolution
 from .utils import Configuration, PyGiJSONEncoder
@@ -67,7 +67,7 @@ class InstrumentCommand(GenericCommand):
     cli_name = "instrument"
 
     @cli_command
-    def get(self, parser):
+    def get(self, parser: argparse.ArgumentParser) -> Callable[[str, dict], None]:
         """Get instrument details"""
         parser.add_argument("name", help="Instrument name")
         parser.add_argument("-p", "--prices", action="store_true", help="Retrieve price data.")
@@ -87,7 +87,8 @@ class InstrumentCommand(GenericCommand):
         )
         return self._get
 
-    def _parse_date(self, date_expr: str):
+    @staticmethod
+    def _parse_date(date_expr: str):
         now = arrow.utcnow().to("local")
         if date_expr.lower() == "now":
             return now.datetime
@@ -140,7 +141,7 @@ class PositionsCommand(GenericCommand):
     cli_name = "positions"
 
     @cli_command
-    def get(self, parser):
+    def get(self, parser: argparse.ArgumentParser):
         """Get all positions"""
         parser.add_argument("--all", help="Get all")
         return self._get
@@ -206,7 +207,7 @@ def init_parser() -> Tuple[argparse.ArgumentParser, argparse.Action]:
     return parser, subparser
 
 
-def build_dispatch_map(parser: argparse.ArgumentParser):
+def build_dispatch_map(parser: argparse.ArgumentParser) -> dict:
     """Create callable dispatch map.
 
     :param parser: Instance of initialised :mod:`argparse`
@@ -216,7 +217,7 @@ def build_dispatch_map(parser: argparse.ArgumentParser):
     return dispatch_map
 
 
-def parse_args(parser: argparse.ArgumentParser):
+def parse_args(parser: argparse.ArgumentParser) -> argparse.Namespace:
     """Parse command line arguments using provided parser.
 
     :param parser: Instance of initialised :mod:`argparse`
@@ -225,7 +226,7 @@ def parse_args(parser: argparse.ArgumentParser):
     return parser.parse_args()
 
 
-def dispatch_command(args, dispatch_map):
+def dispatch_command(args: argparse.Namespace, dispatch_map: dict):
     """Given a parsed arguments object and a dispatch map, call
     relevant callable for ``object`` and ``command`` pair.
 
@@ -240,7 +241,7 @@ def dispatch_command(args, dispatch_map):
     dispatch_map[key](**cmd_args)
 
 
-def get_auth_config(platform=None):
+def get_auth_config(platform: str = None) -> IGUserAuth:
     """Read configuration file and build an instance of :class:`IGUserAuth`
 
     :param platform: Optional platform selector, defaults to ``None`` in which
