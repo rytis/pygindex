@@ -170,7 +170,7 @@ class AccountCommand(GenericCommand):
         self._display_data(kwargs["format"], "cli_get_account.j2", data)
 
 
-def register_command_parsers(cls: type, root_subparser: argparse.ArgumentParser) -> dict:
+def register_command_parsers(cls: type, root_subparser: argparse.Namespace) -> dict:
     """Discover classes implementing command line objects and actions.
     Create new :mod:`argparse` parser for each discovered CLI object class.
     Register the created parser under the ``root_subparser``.
@@ -193,7 +193,7 @@ def register_command_parsers(cls: type, root_subparser: argparse.ArgumentParser)
     return dispatch_map
 
 
-def init_parser() -> Tuple[argparse.ArgumentParser, argparse.Action]:
+def init_parser() -> Tuple[argparse.ArgumentParser, argparse._SubParsersAction]:
     """Create an instance of :class:`argparse.ArgumentParser`
 
     :return: A tuple of created parser and subparser instances
@@ -207,7 +207,7 @@ def init_parser() -> Tuple[argparse.ArgumentParser, argparse.Action]:
     return parser, subparser
 
 
-def build_dispatch_map(parser: argparse.ArgumentParser) -> dict:
+def build_dispatch_map(parser: argparse.Namespace) -> dict:
     """Create callable dispatch map.
 
     :param parser: Instance of initialised :mod:`argparse`
