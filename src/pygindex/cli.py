@@ -8,7 +8,7 @@ import sys
 import jinja2
 from typing import Tuple, Callable
 from .client import IGClient
-from .models import IGUserAuth, IGPriceResolution
+from .models import IGUserAuth, IGPriceResolution, IGAPIConfig
 from .utils import Configuration, PyGiJSONEncoder
 from .utils import PluggableDecorator, method_labeler
 
@@ -103,7 +103,7 @@ class InstrumentCommand(GenericCommand):
         return ts.datetime
 
     def _get(self, name: str, **kwargs):
-        client = IGClient(get_auth_config())
+        client = IGClient(get_auth_config(), get_api_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:
             ts_from, ts_to = None, None
@@ -130,7 +130,7 @@ class InstrumentCommand(GenericCommand):
         return self._search
 
     def _search(self, term, **kwargs):
-        client = IGClient(get_auth_config())
+        client = IGClient(get_auth_config(), get_api_config())
         results = client.search_markets(term)
         self._display_data(kwargs["format"], "cli_search_instrument.j2", results)
 
@@ -147,7 +147,7 @@ class PositionsCommand(GenericCommand):
         return self._get
 
     def _get(self, **kwargs):
-        client = IGClient(get_auth_config())
+        client = IGClient(get_auth_config(), get_api_config())
         positions = client.get_positions()
         self._display_data(kwargs["format"], "cli_get_positions.j2", positions)
 
@@ -163,7 +163,7 @@ class AccountCommand(GenericCommand):
         return self._get
 
     def _get(self, **kwargs):
-        client = IGClient(get_auth_config())
+        client = IGClient(get_auth_config(), get_api_config())
         accounts = client.get_accounts()
         session = client.get_session_details()
         data = dict(accounts=accounts, session=session)
@@ -241,14 +241,36 @@ def dispatch_command(args: argparse.Namespace, dispatch_map: dict):
     dispatch_map[key](**cmd_args)
 
 
+def get_config() -> dict:
+    """Build configuration dictionary
+
+    :return: Dictionary containing configuration settings
+    """
+    conf = Configuration.from_file()
+    return conf
+
+
+def get_api_config(platform: str = None) -> IGAPIConfig:
+    """Create API configuration object
+
+    :param platform: Optional platform selector, defaults to ``None`` in which
+                     case a setting from configuration file will be used.
+    :return: IG API configuration object
+    """
+    conf = get_config()
+    platform = platform or conf["platform"]["default"]
+    ig_api = IGAPIConfig(platform)
+    return ig_api
+
+
 def get_auth_config(platform: str = None) -> IGUserAuth:
-    """Read configuration file and build an instance of :class:`IGUserAuth`
+    """Create authentication object
 
     :param platform: Optional platform selector, defaults to ``None`` in which
                      case a setting from configuration file will be used.
     :return: IG Authentication object
     """
-    conf = Configuration.from_file()
+    conf = get_config()
     platform = platform or conf["platform"]["default"]
     auth_conf = conf["auth"][platform]
     ig_auth = IGUserAuth(**auth_conf)
