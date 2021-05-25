@@ -267,6 +267,13 @@ class IGClient:
         res = [IGPosition(pos) for pos in pos_data["positions"]]
         return res
 
+    def close_position(self, deal_id: str) -> str:
+        """This method closes an open position
+
+        :return:
+        """
+        return "OK"
+
     def search_markets(self, term) -> dict:
         """Search for markets on IG Index platform that match specified criteria
 

@@ -151,6 +151,15 @@ class PositionsCommand(GenericCommand):
         positions = client.get_positions()
         self._display_data(kwargs["format"], "cli_get_positions.j2", positions)
 
+    @cli_command
+    def close(self, parser: argparse.ArgumentParser):
+        """Close position"""
+        parser.add_argument("deal_id", help="Deal ID")
+        return self._close
+
+    def _close(self, **kwargs):
+        print("Closing {}".format(kwargs["deal_id"]))
+
 
 class AccountCommand(GenericCommand):
     """Query account details"""
