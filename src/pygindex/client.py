@@ -272,7 +272,15 @@ class IGClient:
 
         :return:
         """
-        return "OK"
+        payload = {
+            "dealId": deal_id,
+            "orderType": "MARKET",
+            "direction": "SELL",
+            "size": 0.5,
+        }
+        url = f"{self._api.positions_url}/otc"
+        req = self._authenticated_request(url=url, method="post", headers={"_method": "DELETE"}, data=payload)
+        return req
 
     def search_markets(self, term) -> dict:
         """Search for markets on IG Index platform that match specified criteria

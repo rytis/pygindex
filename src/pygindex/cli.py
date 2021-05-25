@@ -158,7 +158,11 @@ class PositionsCommand(GenericCommand):
         return self._close
 
     def _close(self, **kwargs):
-        print("Closing {}".format(kwargs["deal_id"]))
+        deal_id = kwargs["deal_id"]
+        client = IGClient(get_auth_config(), get_api_config())
+        print(f"Closing {deal_id}")
+        result = client.close_position(deal_id)
+        print(f"{result}")
 
 
 class AccountCommand(GenericCommand):
