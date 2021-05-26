@@ -290,6 +290,27 @@ class IGClient:
         req = self._authenticated_request(url=url, method="post", headers={"_method": "DELETE"}, data=payload)
         return req.data
 
+    def open_position(self, instrument: IGInstrument) -> dict:
+        """This method opens a new position
+
+        :return:
+        """
+
+        payload = {
+            "currencyCode": "GBP",
+            "direction": IGPositionDirection.BUY.name,
+            "epic": instrument.instrument["epic"],
+            "expiry": instrument.instrument["expiry"],
+            "forceOpen": False,
+            "guaranteedStop": False,
+            "orderType": "MARKET",
+            "size": 0.5,
+        }
+
+        url = f"{self._api.positions_url}/otc"
+        req = self._authenticated_request(url=url, method="post", data=payload)
+        return req.data
+
     def search_markets(self, term) -> dict:
         """Search for markets on IG Index platform that match specified criteria
 

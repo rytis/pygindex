@@ -152,6 +152,19 @@ class PositionsCommand(GenericCommand):
         self._display_data(kwargs["format"], "cli_get_positions.j2", positions)
 
     @cli_command
+    def open(self, parser: argparse.ArgumentParser):
+        """Open position"""
+        parser.add_argument("instrument", help="IG Index instrument name (epic)")
+        return self._open
+
+    def _open(self, **kwargs):
+        client = IGClient(get_auth_config(), get_api_config())
+        instrument = client.get_instrument(kwargs["instrument"])
+        print(instrument)
+        result = client.open_position(instrument)
+        print(result)
+
+    @cli_command
     def close(self, parser: argparse.ArgumentParser):
         """Close position"""
         group = parser.add_mutually_exclusive_group(required=True)
@@ -171,7 +184,6 @@ class PositionsCommand(GenericCommand):
                 if pos.deal_id == deal_id:
                     positions_to_close.append(pos)
                     break
-
         if positions_to_close:
             for pos in positions_to_close:
                 print(f"Closing position '{pos.deal_id}'...")
