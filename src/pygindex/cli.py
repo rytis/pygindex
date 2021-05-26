@@ -154,24 +154,35 @@ class PositionsCommand(GenericCommand):
     @cli_command
     def close(self, parser: argparse.ArgumentParser):
         """Close position"""
-        parser.add_argument("deal_id", help="Deal ID")
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument("--deal-id", help="Deal ID")
+        group.add_argument("--all", action="store_true", help="Close ALL open positions")
         return self._close
 
     def _close(self, **kwargs):
         deal_id = kwargs["deal_id"]
         client = IGClient(get_auth_config(), get_api_config())
         positions = client.get_positions()
-        position_to_close = None
-        for pos in positions:
-            if pos.deal_id == deal_id:
-                position_to_close = pos
-                break
-        if position_to_close:
-            print(f"Closing {position_to_close.deal_id}")
-            result = client.close_position(position_to_close)
-            print(f"{result}")
+        positions_to_close = []
+        if kwargs["all"]:
+            positions_to_close = positions
         else:
+            for pos in positions:
+                if pos.deal_id == deal_id:
+                    positions_to_close.append(pos)
+                    break
+
+        if positions_to_close:
+            for pos in positions_to_close:
+                print(f"Closing position '{pos.deal_id}'...")
+                result = client.close_position(pos)
+                print(f"{result}")
+        elif kwargs["deal_id"]:
+            # the list is empty, and deal ID is specified, meaning we couldn't find it
             print(f"Cannot find position with ID: {deal_id}")
+        else:
+            # the list is empty, and no deal ID, meaning there are no open positions to close
+            print("No open positions.")
 
 
 class AccountCommand(GenericCommand):
