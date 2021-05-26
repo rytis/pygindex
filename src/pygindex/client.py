@@ -13,6 +13,7 @@ from pygindex.models import (
     IGInstrument,
     IGInstrumentPrices,
     IGPosition,
+    IGPositionDirection,
 )
 
 
@@ -267,20 +268,27 @@ class IGClient:
         res = [IGPosition(pos) for pos in pos_data["positions"]]
         return res
 
-    def close_position(self, deal_id: str) -> str:
+    def close_position(self, position: IGPosition) -> dict:
         """This method closes an open position
 
         :return:
         """
+
+        if position.direction == IGPositionDirection.BUY:
+            close_direction = IGPositionDirection.SELL
+        else:
+            close_direction = IGPositionDirection.BUY
+
         payload = {
-            "dealId": deal_id,
+            "dealId": position.deal_id,
             "orderType": "MARKET",
-            "direction": "SELL",
-            "size": 0.5,
+            "direction": close_direction.value,
+            "size": position.deal_size,
         }
+
         url = f"{self._api.positions_url}/otc"
         req = self._authenticated_request(url=url, method="post", headers={"_method": "DELETE"}, data=payload)
-        return req
+        return req.data
 
     def search_markets(self, term) -> dict:
         """Search for markets on IG Index platform that match specified criteria

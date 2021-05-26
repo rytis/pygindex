@@ -160,9 +160,18 @@ class PositionsCommand(GenericCommand):
     def _close(self, **kwargs):
         deal_id = kwargs["deal_id"]
         client = IGClient(get_auth_config(), get_api_config())
-        print(f"Closing {deal_id}")
-        result = client.close_position(deal_id)
-        print(f"{result}")
+        positions = client.get_positions()
+        position_to_close = None
+        for pos in positions:
+            if pos.deal_id == deal_id:
+                position_to_close = pos
+                break
+        if position_to_close:
+            print(f"Closing {position_to_close.deal_id}")
+            result = client.close_position(position_to_close)
+            print(f"{result}")
+        else:
+            print(f"Cannot find position with ID: {deal_id}")
 
 
 class AccountCommand(GenericCommand):
