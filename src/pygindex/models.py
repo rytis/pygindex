@@ -310,5 +310,5 @@ class IGPosition:
         if self.direction == IGPositionDirection.BUY:
             pnl = (self.sell - self.open_level) * self.deal_size
         else:
-            pnl = (self.buy - self.open_level) * self.deal_size
+            pnl = (self.open_level - self.buy) * self.deal_size
         return pnl
