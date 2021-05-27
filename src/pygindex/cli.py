@@ -8,7 +8,7 @@ import sys
 import jinja2
 from typing import Tuple, Callable
 from .client import IGClient
-from .models import IGUserAuth, IGPriceResolution, IGAPIConfig
+from .models import IGUserAuth, IGPriceResolution, IGAPIConfig, IGPositionDirection
 from .utils import Configuration, PyGiJSONEncoder
 from .utils import PluggableDecorator, method_labeler
 
@@ -155,13 +155,18 @@ class PositionsCommand(GenericCommand):
     def open(self, parser: argparse.ArgumentParser):
         """Open position"""
         parser.add_argument("instrument", help="IG Index instrument name (epic)")
+        parser.add_argument("-d", "--direction",
+                            required=True,
+                            choices=[d.value for d in IGPositionDirection],
+                            help="Direction of the deal")
         return self._open
 
     def _open(self, **kwargs):
         client = IGClient(get_auth_config(), get_api_config())
         instrument = client.get_instrument(kwargs["instrument"])
         print(instrument)
-        result = client.open_position(instrument)
+        direction = getattr(IGPositionDirection, kwargs["direction"])
+        result = client.open_position(instrument, direction)
         print(result)
 
     @cli_command

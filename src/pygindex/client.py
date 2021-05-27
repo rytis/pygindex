@@ -290,21 +290,23 @@ class IGClient:
         req = self._authenticated_request(url=url, method="post", headers={"_method": "DELETE"}, data=payload)
         return req.data
 
-    def open_position(self, instrument: IGInstrument) -> dict:
+    def open_position(self, instrument: IGInstrument, direction: IGPositionDirection, size: float = None) -> dict:
         """This method opens a new position
 
         :return:
         """
 
+        deal_size = size or instrument.dealing_rules["minDealSize"]["value"]
+
         payload = {
             "currencyCode": "GBP",
-            "direction": IGPositionDirection.BUY.name,
+            "direction": direction.name,
             "epic": instrument.instrument["epic"],
             "expiry": instrument.instrument["expiry"],
             "forceOpen": False,
             "guaranteedStop": False,
             "orderType": "MARKET",
-            "size": instrument.dealing_rules["minDealSize"]["value"],
+            "size": deal_size,
         }
 
         url = f"{self._api.positions_url}/otc"
