@@ -304,7 +304,7 @@ class IGClient:
             "forceOpen": False,
             "guaranteedStop": False,
             "orderType": "MARKET",
-            "size": 0.5,
+            "size": instrument.dealing_rules["minDealSize"]["value"],
         }
 
         url = f"{self._api.positions_url}/otc"
