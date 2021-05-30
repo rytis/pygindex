@@ -159,14 +159,16 @@ class PositionsCommand(GenericCommand):
                             required=True,
                             choices=[d.value for d in IGPositionDirection],
                             help="Direction of the deal")
+        parser.add_argument("-s", "--size", type=float,
+                            help="Size of the deal. Will use min deal size for the instrument if not specified")
         return self._open
 
     def _open(self, **kwargs):
         client = IGClient(get_auth_config(), get_api_config())
         instrument = client.get_instrument(kwargs["instrument"])
-        print(instrument)
+        size = kwargs["size"] or None
         direction = getattr(IGPositionDirection, kwargs["direction"])
-        result = client.open_position(instrument, direction)
+        result = client.open_position(instrument, direction, size=size)
         print(result)
 
     @cli_command
