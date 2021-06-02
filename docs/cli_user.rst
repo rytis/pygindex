@@ -103,6 +103,8 @@ List all open positions::
     XXAAAAXXXXXXXXX  UA.D.AAPL.DAILY.IP  Apple Inc (All Sessions)       0.1    12234.00    12500.00       26.60
     XXAAAAXXXXXXXXX  IX.D.FTSE.DAILY.IP  FTSE 100                       0.5     6873.60     7015.20       70.80
                                                                                           Total:         -19.00
+
+
 Get account details in JSON format::
 
     $ pygi --format json account get
