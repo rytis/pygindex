@@ -293,7 +293,23 @@ class IGClient:
     def open_position(self, instrument: IGInstrument, direction: IGPositionDirection, size: float = None) -> dict:
         """This method opens a new position
 
-        :return:
+        Example::
+
+            c = IGClient(ig_auth, ig_api)
+            i = c.get_instrument("UA.D.AAPL.DAILY.IP")
+            r = c.open_position(i, IGPositionDirection.BUY, 0.5)
+
+        The result of this operation will be a deal reference code if successful::
+
+            {'dealReference': 'TV3XXXXXXXXXXXX'}
+
+        :param instrument: Open position for specified instrument
+        :type instrument: IGInstrument
+        :param direction: Direction of the position
+        :type direction: IGPositionDirection
+        :param size: Size of the position
+        :type size: float
+        :return: Confirmation ID of the operation or an error message from IG Index platform
         """
 
         deal_size = size or instrument.dealing_rules["minDealSize"]["value"]
