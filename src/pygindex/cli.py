@@ -155,12 +155,19 @@ class PositionsCommand(GenericCommand):
     def open(self, parser: argparse.ArgumentParser):
         """Open position"""
         parser.add_argument("instrument", help="IG Index instrument name (epic)")
-        parser.add_argument("-d", "--direction",
-                            required=True,
-                            choices=[d.value for d in IGPositionDirection],
-                            help="Direction of the deal")
-        parser.add_argument("-s", "--size", type=float,
-                            help="Size of the deal. Will use min deal size for the instrument if not specified")
+        parser.add_argument(
+            "-d",
+            "--direction",
+            required=True,
+            choices=[d.value for d in IGPositionDirection],
+            help="Direction of the deal",
+        )
+        parser.add_argument(
+            "-s",
+            "--size",
+            type=float,
+            help="Size of the deal. Will use min deal size for the instrument if not specified",
+        )
         return self._open
 
     def _open(self, **kwargs):

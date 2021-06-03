@@ -238,7 +238,7 @@ class IGClient:
         req = self._authenticated_request(url=self._api.positions_url, method="get")
         return req.data
 
-    def get_positions(self) -> list[IGPosition]:
+    def get_positions(self) -> List[IGPosition]:
         """This method retrieves all positions for authenticated account from the API.
 
         Example::
