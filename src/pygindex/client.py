@@ -271,7 +271,10 @@ class IGClient:
     def close_position(self, position: IGPosition) -> dict:
         """This method closes an open position
 
-        :return:
+        :param position: Position to close
+        :param type: IGPosition
+        :return: Response from IG API service
+        :rtype: dict
         """
 
         if position.direction == IGPositionDirection.BUY:
