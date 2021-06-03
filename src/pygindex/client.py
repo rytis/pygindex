@@ -272,7 +272,7 @@ class IGClient:
         """This method closes an open position
 
         :param position: Position to close
-        :param type: IGPosition
+        :type position: IGPosition
         :return: Response from IG API service
         :rtype: dict
         """
