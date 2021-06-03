@@ -2,7 +2,7 @@
 import time
 from datetime import datetime
 from urllib.parse import urljoin
-from typing import Dict, Union
+from typing import Dict, Union, List
 import requests
 from pygindex.models import (
     IGPriceResolution,
@@ -238,7 +238,7 @@ class IGClient:
         req = self._authenticated_request(url=self._api.positions_url, method="get")
         return req.data
 
-    def get_positions(self) -> list:
+    def get_positions(self) -> list[IGPosition]:
         """This method retrieves all positions for authenticated account from the API.
 
         Example::
