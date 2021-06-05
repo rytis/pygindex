@@ -6,6 +6,7 @@ import json
 import functools
 import sys
 import jinja2
+from datetime import datetime
 from typing import Tuple, Callable
 from .client import IGClient
 from .models import IGUserAuth, IGPriceResolution, IGAPIConfig, IGPositionDirection
@@ -88,7 +89,20 @@ class InstrumentCommand(GenericCommand):
         return self._get
 
     @staticmethod
-    def _parse_date(date_expr: str):
+    def _parse_date(date_expr: str) -> datetime:
+        """Attempt to parse date string
+
+        We should be able to recognise the following:
+
+        * `now` - Return current date time
+        * Absolute date time expression, such as `2021/01/02`, etc
+        * Relative date time expression, such as `2 days ago`
+
+        :param date_expr: String containing date time expression
+        :type date_expr: str
+        :return: Parsed datetime object
+        :rtype: datetime
+        """
         now = arrow.utcnow().to("local")
         if date_expr.lower() == "now":
             return now.datetime
