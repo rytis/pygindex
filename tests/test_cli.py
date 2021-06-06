@@ -1,5 +1,5 @@
 import pytest
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import tz
 from pygindex.cli import app, InstrumentCommand
 
@@ -19,6 +19,10 @@ def test_date_parsing_datetime():
 
 def test_date_parsing_relative():
     """Test parsing relative 'human language' date time strings"""
+    real_2d_ago = datetime.now(tz=tz.tzlocal()) - timedelta(days=2)
+    test_2d_ago = InstrumentCommand._parse_date("2 days ago")
+    time_delta = test_2d_ago - real_2d_ago
+    assert time_delta.seconds < 2  # we should have relatively close times
 
 
 def test_date_parsing_now():
