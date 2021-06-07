@@ -31,3 +31,11 @@ def test_date_parsing_now():
     test_now = InstrumentCommand._parse_date("now")
     time_delta = test_now - real_now
     assert time_delta.seconds < 2  # not expecting more than a couple of secs between statements
+
+
+def test_date_parsing_exit():
+    """Test we exit when date time cannot be parsed"""
+    with pytest.raises(SystemExit) as exc:
+        d = InstrumentCommand._parse_date("invalid_data_time_specifier")
+    assert exc.type == SystemExit
+    assert exc.value.code == 1
