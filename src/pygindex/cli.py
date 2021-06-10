@@ -117,6 +117,14 @@ class InstrumentCommand(GenericCommand):
         return ts.datetime
 
     def _get(self, name: str, **kwargs):
+        """Retrieve instrument price data
+        
+        Use either range (pair of date time values) or maximum number of data points
+        at a given time resolution to retrieve price data for a given instrument.
+
+        Display data in requested format
+        """
+
         client = IGClient(get_auth_config(), get_api_config())
         instrument_data = client.get_instrument(name)
         if kwargs["prices"]:
