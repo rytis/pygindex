@@ -118,7 +118,7 @@ class InstrumentCommand(GenericCommand):
 
     def _get(self, name: str, **kwargs):
         """Retrieve instrument price data
-        
+
         Use either range (pair of date time values) or maximum number of data points
         at a given time resolution to retrieve price data for a given instrument.
 
@@ -359,6 +359,11 @@ def get_auth_config(platform: str = None) -> IGUserAuth:
 
 
 def app():
+    """Main application function.
+
+    Build parser, create command dispatch map and call the command
+    specified on the command line.
+    """
     parser, subparser = init_parser()
     dispatch_map = build_dispatch_map(subparser)
     args = parse_args(parser)
