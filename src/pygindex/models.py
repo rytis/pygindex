@@ -144,7 +144,7 @@ class IGAPIConfig:
             "demo": "https://demo-api.ig.com/gateway/deal",
         }
         if self.platform is None:
-            self.platform = os.environ.get("IG_PLATFORM", default="live")
+            self.platform = "demo"
         if self.platform not in platform_urls.keys():
             raise ValueError(f"Unknown platform type: {self.platform} " f"(valid options: 'live', 'demo')")
         self.base_url = platform_urls[self.platform]

@@ -8,12 +8,6 @@ def test_valid_env_var(monkeypatch):
     assert cfg.base_url == "https://demo-api.ig.com/gateway/deal"
 
 
-def test_invalid_env_var(monkeypatch):
-    monkeypatch.setenv("IG_PLATFORM", "does_not_exist")
-    with pytest.raises(ValueError):
-        cfg = IGAPIConfig()
-
-
 def test_session_url():
     cfg = IGAPIConfig()
     assert cfg.session_url.endswith("/session")

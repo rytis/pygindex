@@ -17,6 +17,7 @@ class PyGiJSONEncoder(json.JSONEncoder):
     * :class:enum.Enum objects are serialised by using string representation of their ``name`` property
     * :class:dataclasses: objects are serialised by turning them in to dictionary objects
     """
+
     def default(self, o: Any) -> Any:
         if isinstance(o, enum.Enum):
             return o.name
