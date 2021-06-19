@@ -2,12 +2,6 @@ import pytest
 from pygindex.models import IGAPIConfig
 
 
-def test_valid_env_var(monkeypatch):
-    monkeypatch.setenv("IG_PLATFORM", "demo")
-    cfg = IGAPIConfig()
-    assert cfg.base_url == "https://demo-api.ig.com/gateway/deal"
-
-
 def test_session_url():
     cfg = IGAPIConfig()
     assert cfg.session_url.endswith("/session")
