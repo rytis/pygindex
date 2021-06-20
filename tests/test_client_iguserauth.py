@@ -41,15 +41,3 @@ def test_auth_req_data(ig_user_auth):
            TEST_INIT_DATA["username"]
     assert ig_user_auth.auth_req_data["password"] == TEST_INIT_DATA["password"]
     assert ig_user_auth.auth_req_data["encryptedPassword"] is None
-
-
-def test_env_var_lookup(monkeypatch):
-    for k, v in TEST_INIT_DATA.items():
-        monkeypatch.setenv("IG_{}".format(k.upper()), v)
-    auth = IGUserAuth()
-    assert auth.username == TEST_INIT_DATA["username"]
-
-
-def test_undefined_param_exception():
-    with pytest.raises(ValueError):
-        auth = IGUserAuth()

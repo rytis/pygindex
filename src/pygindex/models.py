@@ -1,5 +1,4 @@
-import os
-from dataclasses import dataclass, fields, field
+from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Dict
 
@@ -69,20 +68,9 @@ class IGUserAuth:
     :type password: str
     """
 
-    api_key: str = None
-    username: str = None
-    password: str = None
-
-    def __post_init__(self):
-        """Attempt to fill in configuration from env vars"""
-        for fld in fields(self):
-            if getattr(self, fld.name) is None:
-                env_var_name = "IG_{}".format(fld.name.upper())
-                if env_var_name not in os.environ:
-                    raise ValueError(
-                        f"Required argument '{fld.name}' or environment " f"variable '{env_var_name}' not set"
-                    )
-                setattr(self, fld.name, os.environ[env_var_name])
+    api_key: str
+    username: str
+    password: str
 
     @property
     def auth_req_headers(self) -> Dict[str, str]:
